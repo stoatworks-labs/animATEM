@@ -1,0 +1,28 @@
+{
+  "$schema": "../node_modules/@companion-module/base/assets/manifest.schema.json",
+  "type": "connection",
+  "id": "animatem",
+  "name": "animatem",
+  "shortname": "animATEM",
+  "description": "Control animATEM — cut/auto/FTB, source selection, and memory recall for a Blackmagic ATEM switcher via animATEM's local control server.",
+  "version": "0.1.0",
+  "license": "MIT",
+  "repository": "git+https://github.com/allansargeant/animATEM.git",
+  "bugs": "https://github.com/allansargeant/animATEM/issues",
+  "maintainers": [
+    {
+      "name": "Allan Sargeant",
+      "email": ""
+    }
+  ],
+  "runtime": {
+    "type": "node22",
+    "api": "nodejs-ipc",
+    "apiVersion": "0.0.0",
+    "entrypoint": "../dist/main.js"
+  },
+  "legacyIds": [],
+  "manufacturer": "Allan Sargeant",
+  "products": ["animATEM"],
+  "keywords": ["atem", "blackmagic", "switcher", "supersource", "dve"]
+}

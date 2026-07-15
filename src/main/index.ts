@@ -4,6 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { atemConnection } from './services/atemConnection'
 import { getCalibrationProfile, saveCalibrationProfile } from './services/calibrationStore'
 import { deleteMemory, listMemories, saveMemory } from './services/memoryStore'
+import { controlServer } from './services/controlServer'
 import type { AtemBoxLayout, AtemDveLayout, CalibrationProfile, Memory } from '../shared/protocol'
 
 function createWindow(): BrowserWindow {
@@ -106,8 +107,16 @@ app.whenReady().then(() => {
   )
 
   ipcMain.handle('memory:list', () => listMemories())
-  ipcMain.handle('memory:save', (_e, memory: Memory) => saveMemory(memory))
-  ipcMain.handle('memory:delete', (_e, id: string) => deleteMemory(id))
+  ipcMain.handle('memory:save', async (_e, memory: Memory) => {
+    await saveMemory(memory)
+    await controlServer.broadcastMemories()
+  })
+  ipcMain.handle('memory:delete', async (_e, id: string) => {
+    await deleteMemory(id)
+    await controlServer.broadcastMemories()
+  })
+
+  controlServer.start()
 
   ipcMain.handle('window:toggle-kiosk', () => {
     const next = !mainWindow.isKiosk()
@@ -123,6 +132,7 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
   atemConnection.disconnect()
+  controlServer.stop()
   if (process.platform !== 'darwin') {
     app.quit()
   }

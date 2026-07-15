@@ -16,6 +16,12 @@ macro system — capture and recall these arrangements.
 > reviewed by a human. It has not yet been validated against real ATEM
 > hardware.
 
+A companion [Bitfocus Companion](https://bitfocus.io/companion) module lives
+in [`companion-module/`](companion-module/README.md) — it lets Companion
+buttons trigger Cut/Auto/FTB, source selection, and memory recall against
+animATEM's local control server, with feedback/variables for the current
+program/preview input.
+
 ## Concept
 
 ![Pipeline concept: ATEM multiview over USB is captured, cropped per box, and recomposited into an editable preview before being pushed back to the switcher over Ethernet](docs/concept-diagram.svg)
@@ -101,3 +107,11 @@ against a generic webcam, not a real ATEM's multiview output.
 Requires an ATEM Mini Pro/Extreme ISO with its USB output set to
 **Multiview** (not the default Program) for the compositing workflow to
 work.
+
+The local control server (`ws://127.0.0.1:51234`) and the
+[companion module](companion-module/README.md) that talks to it are also
+built and verified end-to-end — a real WebSocket client (including the
+module's own compiled client code) connects, receives the initial status/
+snapshot/memories state, and round-trips commands against a running
+animATEM instance without errors. Like everything else, actual command
+behavior (cut/auto/recall) hasn't been checked against a real switcher yet.

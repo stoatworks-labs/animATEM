@@ -101,6 +101,27 @@ export interface DveMemory {
 
 export type Memory = SuperSourceMemory | DveMemory
 
+// Wire protocol for the local control server (ws://127.0.0.1:CONTROL_SERVER_PORT),
+// used by the Companion module — see companion-module/src/wsClient.ts, which
+// mirrors these shapes (a separate npm package, so it can't import this file
+// directly; keep both in sync by hand when changing this protocol).
+
+export const CONTROL_SERVER_PORT = 51234
+
+export type ControlOutboundMessage =
+  | { type: 'status'; status: ConnectionStatus }
+  | { type: 'snapshot'; snapshot: AtemSnapshot | null }
+  | { type: 'memories'; memories: Memory[] }
+
+export type ControlInboundMessage =
+  | { type: 'cut'; me?: number }
+  | { type: 'auto'; me?: number }
+  | { type: 'ftb'; me?: number }
+  | { type: 'setProgram'; input: number; me?: number }
+  | { type: 'setPreview'; input: number; me?: number }
+  | { type: 'setAux'; source: number; bus?: number }
+  | { type: 'recallMemory'; id: string }
+
 /** Normalized (0-1) rect within the multiview capture frame. */
 export interface BoxRect {
   x: number
