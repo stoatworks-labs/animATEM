@@ -65,6 +65,10 @@ const api = {
     list: (): Promise<Memory[]> => ipcRenderer.invoke('memory:list'),
     save: (memory: Memory): Promise<void> => ipcRenderer.invoke('memory:save', memory),
     delete: (id: string): Promise<void> => ipcRenderer.invoke('memory:delete', id)
+  },
+  window: {
+    toggleKiosk: (): Promise<boolean> => ipcRenderer.invoke('window:toggle-kiosk'),
+    isKiosk: (): Promise<boolean> => ipcRenderer.invoke('window:is-kiosk')
   }
 }
 

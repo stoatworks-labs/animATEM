@@ -76,6 +76,79 @@ body {
   padding: 16px;
 }
 
+.touch-screen {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.touch-screen-uncalibrated {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b6d73;
+  font-size: 13px;
+  text-align: center;
+  padding: 32px;
+}
+
+.multiview-canvas {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  aspect-ratio: unset;
+  cursor: pointer;
+  object-fit: contain;
+}
+
+.function-key-row {
+  display: flex;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.fkey {
+  flex: 1;
+  background: #1a1c20;
+  border: 1px solid #2a2c31;
+  border-radius: 6px;
+  color: #e8e8ea;
+  padding: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fkey:hover {
+  background: #24262b;
+}
+
+.fkey.active {
+  background: #2a2c31;
+  border-color: #4ade80;
+  color: #4ade80;
+}
+
+.fkey-cut {
+  background: #3a1313;
+  border-color: #5a1f1f;
+  color: #f87171;
+}
+
+.fkey-auto {
+  background: #133a1f;
+  border-color: #1e5631;
+  color: #4ade80;
+}
+
+.fkey-ftb {
+  background: #1a1c20;
+}
+
 .capture-picker {
   width: 100%;
   max-width: 960px;
@@ -327,6 +400,15 @@ body {
   font-weight: 500;
   color: #9a9ca3;
   margin: 0 0 6px;
+}
+
+.ssrc-preview-canvas {
+  cursor: grab;
+  touch-action: none;
+}
+
+.ssrc-preview-canvas:active {
+  cursor: grabbing;
 }
 
 .ssrc-box-table {

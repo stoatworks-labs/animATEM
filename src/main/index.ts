@@ -36,6 +36,10 @@ function createWindow(): BrowserWindow {
     return { action: 'deny' }
   })
 
+  mainWindow.webContents.on('before-input-event', (_event, input) => {
+    if (input.key === 'Escape' && mainWindow.isKiosk()) mainWindow.setKiosk(false)
+  })
+
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
@@ -104,6 +108,13 @@ app.whenReady().then(() => {
   ipcMain.handle('memory:list', () => listMemories())
   ipcMain.handle('memory:save', (_e, memory: Memory) => saveMemory(memory))
   ipcMain.handle('memory:delete', (_e, id: string) => deleteMemory(id))
+
+  ipcMain.handle('window:toggle-kiosk', () => {
+    const next = !mainWindow.isKiosk()
+    mainWindow.setKiosk(next)
+    return next
+  })
+  ipcMain.handle('window:is-kiosk', () => mainWindow.isKiosk())
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()

@@ -1,8 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { captureManager } from '../capture/captureManager'
 import { SourceCompositor } from '../compositor/compositeCanvas'
-import { boxToCropFraction, boxToScreenRect } from '../compositor/superSourceCoords'
+import {
+  boxToCropFraction,
+  boxToScreenRect,
+  screenPositionToBoxXY,
+  screenSizeToBoxSize
+} from '../compositor/superSourceCoords'
 import { normalizedToPixel } from '../compositor/boxGeometry'
+import { applyDrag, hitTestBoxes, type DragOrigin } from '../compositor/dragInteraction'
 import MemoryBank from './MemoryBank'
 import type {
   AtemSnapshot,
@@ -14,6 +20,13 @@ import type {
 interface Props {
   snapshot: AtemSnapshot | null
   calibration: CalibrationProfile | null
+}
+
+interface ActiveDrag {
+  boxIndex: number
+  mode: 'move' | 'resize'
+  corner?: 'nw' | 'ne' | 'sw' | 'se'
+  origin: DragOrigin
 }
 
 function emptyBox(index: number): SuperSourceBoxState {
@@ -38,7 +51,8 @@ function drawArrangement(
   compositor: SourceCompositor,
   boxes: SuperSourceBoxState[],
   width: number,
-  height: number
+  height: number,
+  drawHandles: boolean
 ): void {
   ctx.fillStyle = '#000'
   ctx.fillRect(0, 0, width, height)
@@ -47,6 +61,22 @@ function drawArrangement(
     const rect = boxToScreenRect(box)
     const dest = normalizedToPixel(rect, width, height)
     compositor.drawSource(ctx, video, box.source, dest, boxToCropFraction(box))
+
+    if (drawHandles) {
+      ctx.strokeStyle = 'rgba(74, 222, 128, 0.8)'
+      ctx.lineWidth = 2
+      ctx.strokeRect(dest.x, dest.y, dest.width, dest.height)
+      ctx.fillStyle = '#4ade80'
+      const handleSize = 8
+      for (const [hx, hy] of [
+        [dest.x, dest.y],
+        [dest.x + dest.width, dest.y],
+        [dest.x, dest.y + dest.height],
+        [dest.x + dest.width, dest.y + dest.height]
+      ]) {
+        ctx.fillRect(hx - handleSize / 2, hy - handleSize / 2, handleSize, handleSize)
+      }
+    }
   }
 }
 
@@ -60,6 +90,7 @@ function SuperSourceEditor({ snapshot, calibration }: Props): React.JSX.Element 
   const previewCanvasRef = useRef<HTMLCanvasElement>(null)
   const compositorRef = useRef(new SourceCompositor(calibration, snapshot?.multiViewers ?? []))
   const boxesRef = useRef(boxes)
+  const dragRef = useRef<ActiveDrag | null>(null)
 
   useEffect(() => {
     boxesRef.current = boxes
@@ -97,7 +128,7 @@ function SuperSourceEditor({ snapshot, calibration }: Props): React.JSX.Element 
           const liveBoxes = [0, 1, 2, 3].map(
             (i) => liveSuperSource.boxes.find((b) => b.index === i) ?? emptyBox(i)
           )
-          drawArrangement(ctx, video, compositor, liveBoxes, program.width, program.height)
+          drawArrangement(ctx, video, compositor, liveBoxes, program.width, program.height, false)
         }
       }
 
@@ -107,7 +138,15 @@ function SuperSourceEditor({ snapshot, calibration }: Props): React.JSX.Element 
         if (preview.height !== video.videoHeight) preview.height = video.videoHeight
         const ctx = preview.getContext('2d')
         if (ctx)
-          drawArrangement(ctx, video, compositor, boxesRef.current, preview.width, preview.height)
+          drawArrangement(
+            ctx,
+            video,
+            compositor,
+            boxesRef.current,
+            preview.width,
+            preview.height,
+            true
+          )
       }
     })
   }, [liveSuperSource])
@@ -130,6 +169,58 @@ function SuperSourceEditor({ snapshot, calibration }: Props): React.JSX.Element 
   const recallMemory = (memory: Memory): void => {
     if (memory.kind !== 'supersource') return
     setBoxes([0, 1, 2, 3].map((i) => ({ ...emptyBox(i), ...memory.layout.boxes[i] })))
+  }
+
+  const pointerToNormalized = (
+    e: React.PointerEvent<HTMLCanvasElement>
+  ): { x: number; y: number } | null => {
+    const canvas = previewCanvasRef.current
+    if (!canvas) return null
+    const bounds = canvas.getBoundingClientRect()
+    return {
+      x: (e.clientX - bounds.left) / bounds.width,
+      y: (e.clientY - bounds.top) / bounds.height
+    }
+  }
+
+  const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>): void => {
+    const point = pointerToNormalized(e)
+    if (!point) return
+    const targets = boxesRef.current
+      .filter((b) => b.enabled)
+      .map((b) => ({ id: b.index, rect: boxToScreenRect(b) }))
+    const hit = hitTestBoxes(targets, point)
+    if (!hit) return
+    const box = boxesRef.current.find((b) => b.index === hit.id)
+    if (!box) return
+    dragRef.current = {
+      boxIndex: hit.id,
+      mode: hit.mode,
+      corner: hit.corner,
+      origin: { rect: boxToScreenRect(box), pointer: point }
+    }
+    e.currentTarget.setPointerCapture(e.pointerId)
+  }
+
+  const onPointerMove = (e: React.PointerEvent<HTMLCanvasElement>): void => {
+    const drag = dragRef.current
+    if (!drag) return
+    const point = pointerToNormalized(e)
+    if (!point) return
+    const rect = applyDrag(drag.origin, drag.mode, drag.corner, point, true)
+    const center = screenPositionToBoxXY(rect.x + rect.width / 2, rect.y + rect.height / 2)
+    updateBox(drag.boxIndex, {
+      x: Math.round(center.x),
+      y: Math.round(center.y),
+      size: Math.round(screenSizeToBoxSize(rect.width))
+    })
+  }
+
+  const onPointerUp = (e: React.PointerEvent<HTMLCanvasElement>): void => {
+    dragRef.current = null
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId)
+    }
   }
 
   return (
@@ -158,8 +249,15 @@ function SuperSourceEditor({ snapshot, calibration }: Props): React.JSX.Element 
           <canvas ref={programCanvasRef} className="capture-canvas" />
         </div>
         <div className="ssrc-pane">
-          <h3>Preview (editing)</h3>
-          <canvas ref={previewCanvasRef} className="capture-canvas" />
+          <h3>Preview (editing) — drag boxes to move, drag a corner to resize</h3>
+          <canvas
+            ref={previewCanvasRef}
+            className="capture-canvas ssrc-preview-canvas"
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerLeave={onPointerUp}
+          />
         </div>
       </div>
       <table className="ssrc-box-table">

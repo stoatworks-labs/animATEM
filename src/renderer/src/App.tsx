@@ -8,14 +8,15 @@ import LiveMultiviewPreview from './components/LiveMultiviewPreview'
 import CalibrationScreen from './components/CalibrationScreen'
 import SuperSourceEditor from './components/SuperSourceEditor'
 import DVEEditor from './components/DVEEditor'
+import TouchScreen from './components/TouchScreen'
 
-type View = 'live' | 'calibrate' | 'supersource' | 'dve'
+type View = 'touch' | 'live' | 'calibrate' | 'supersource' | 'dve'
 
 function App(): React.JSX.Element {
   const [status, setStatus] = useState<ConnectionStatus>('disconnected')
   const [snapshot, setSnapshot] = useState<AtemSnapshot | null>(null)
   const [lastError, setLastError] = useState<string | null>(null)
-  const [view, setView] = useState<View>('live')
+  const [view, setView] = useState<View>('touch')
   const [calibrationVersion, setCalibrationVersion] = useState(0)
 
   const { frameSize } = useCaptureState()
@@ -40,6 +41,9 @@ function App(): React.JSX.Element {
           {status}
         </span>
         <nav className="view-tabs">
+          <button className={view === 'touch' ? 'active' : ''} onClick={() => setView('touch')}>
+            Touch
+          </button>
           <button className={view === 'live' ? 'active' : ''} onClick={() => setView('live')}>
             Live
           </button>
@@ -63,6 +67,7 @@ function App(): React.JSX.Element {
         <ConnectionSettings status={status} lastError={lastError} />
       </header>
       <div className="app-body">
+        {view === 'touch' && <TouchScreen snapshot={snapshot} calibration={calibration} />}
         {view === 'live' && (
           <>
             <LiveMultiviewPreview />

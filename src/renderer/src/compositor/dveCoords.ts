@@ -25,6 +25,18 @@ export function dveToScreenRect(
   }
 }
 
+/** Inverse of dveToScreenRect's centering math — used to turn a drag gesture in normalized screen space back into raw positionX/positionY/sizeX/sizeY. */
+export function screenPositionToDveXY(centerX: number, centerY: number): { x: number; y: number } {
+  return {
+    x: (centerX - 0.5) * COORD_RANGE * 2,
+    y: (0.5 - centerY) * COORD_RANGE * 2
+  }
+}
+
+export function screenSizeToDveSize(normalizedSize: number): number {
+  return Math.max(0, normalizedSize * COORD_RANGE)
+}
+
 export function dveToCropFraction(
   dve: Pick<
     UpstreamKeyerDveState,

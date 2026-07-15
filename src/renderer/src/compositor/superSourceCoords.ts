@@ -26,6 +26,18 @@ export function boxToScreenRect(box: SuperSourceBoxState): BoxRect {
   }
 }
 
+/** Inverse of boxToScreenRect's centering math — used to turn a drag gesture in normalized screen space back into raw x/y/size for updateBox(). */
+export function screenPositionToBoxXY(centerX: number, centerY: number): { x: number; y: number } {
+  return {
+    x: (centerX - 0.5) * COORD_RANGE * 2,
+    y: (0.5 - centerY) * COORD_RANGE * 2
+  }
+}
+
+export function screenSizeToBoxSize(normalizedSize: number): number {
+  return Math.max(0, normalizedSize * COORD_RANGE)
+}
+
 export function boxToCropFraction(box: SuperSourceBoxState): CropFraction | undefined {
   if (!box.cropped) return undefined
   return {

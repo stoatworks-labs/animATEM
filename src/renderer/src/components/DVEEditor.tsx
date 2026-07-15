@@ -1,8 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { captureManager } from '../capture/captureManager'
 import { SourceCompositor } from '../compositor/compositeCanvas'
-import { dveToCropFraction, dveToScreenRect } from '../compositor/dveCoords'
+import {
+  dveToCropFraction,
+  dveToScreenRect,
+  screenPositionToDveXY,
+  screenSizeToDveSize
+} from '../compositor/dveCoords'
 import { normalizedToPixel } from '../compositor/boxGeometry'
+import { applyDrag, hitTestBoxes, type DragOrigin } from '../compositor/dragInteraction'
 import MemoryBank from './MemoryBank'
 import type {
   AtemSnapshot,
@@ -14,6 +20,12 @@ import type {
 interface Props {
   snapshot: AtemSnapshot | null
   calibration: CalibrationProfile | null
+}
+
+interface ActiveDrag {
+  mode: 'move' | 'resize'
+  corner?: 'nw' | 'ne' | 'sw' | 'se'
+  origin: DragOrigin
 }
 
 function emptyDve(meIndex: number, keyerIndex: number): UpstreamKeyerDveState {
@@ -41,13 +53,30 @@ function drawDve(
   compositor: SourceCompositor,
   dve: UpstreamKeyerDveState,
   width: number,
-  height: number
+  height: number,
+  drawHandles: boolean
 ): void {
   ctx.fillStyle = '#000'
   ctx.fillRect(0, 0, width, height)
   const rect = dveToScreenRect(dve)
   const dest = normalizedToPixel(rect, width, height)
   compositor.drawSource(ctx, video, dve.fillSource, dest, dveToCropFraction(dve))
+
+  if (drawHandles) {
+    ctx.strokeStyle = 'rgba(74, 222, 128, 0.8)'
+    ctx.lineWidth = 2
+    ctx.strokeRect(dest.x, dest.y, dest.width, dest.height)
+    ctx.fillStyle = '#4ade80'
+    const handleSize = 8
+    for (const [hx, hy] of [
+      [dest.x, dest.y],
+      [dest.x + dest.width, dest.y],
+      [dest.x, dest.y + dest.height],
+      [dest.x + dest.width, dest.y + dest.height]
+    ]) {
+      ctx.fillRect(hx - handleSize / 2, hy - handleSize / 2, handleSize, handleSize)
+    }
+  }
 }
 
 function DVEEditor({ snapshot, calibration }: Props): React.JSX.Element {
@@ -61,6 +90,7 @@ function DVEEditor({ snapshot, calibration }: Props): React.JSX.Element {
   const previewCanvasRef = useRef<HTMLCanvasElement>(null)
   const compositorRef = useRef(new SourceCompositor(calibration, snapshot?.multiViewers ?? []))
   const dveRef = useRef(dve)
+  const dragRef = useRef<ActiveDrag | null>(null)
 
   useEffect(() => {
     dveRef.current = dve
@@ -92,7 +122,7 @@ function DVEEditor({ snapshot, calibration }: Props): React.JSX.Element {
         if (program.width !== video.videoWidth) program.width = video.videoWidth
         if (program.height !== video.videoHeight) program.height = video.videoHeight
         const ctx = program.getContext('2d')
-        if (ctx) drawDve(ctx, video, compositor, liveDve, program.width, program.height)
+        if (ctx) drawDve(ctx, video, compositor, liveDve, program.width, program.height, false)
       }
 
       const preview = previewCanvasRef.current
@@ -100,7 +130,8 @@ function DVEEditor({ snapshot, calibration }: Props): React.JSX.Element {
         if (preview.width !== video.videoWidth) preview.width = video.videoWidth
         if (preview.height !== video.videoHeight) preview.height = video.videoHeight
         const ctx = preview.getContext('2d')
-        if (ctx) drawDve(ctx, video, compositor, dveRef.current, preview.width, preview.height)
+        if (ctx)
+          drawDve(ctx, video, compositor, dveRef.current, preview.width, preview.height, true)
       }
     })
   }, [liveDve])
@@ -120,6 +151,50 @@ function DVEEditor({ snapshot, calibration }: Props): React.JSX.Element {
   const recallMemory = (memory: Memory): void => {
     if (memory.kind !== 'dve') return
     setDve((prev) => ({ ...prev, ...memory.layout }))
+  }
+
+  const pointerToNormalized = (
+    e: React.PointerEvent<HTMLCanvasElement>
+  ): { x: number; y: number } | null => {
+    const canvas = previewCanvasRef.current
+    if (!canvas) return null
+    const bounds = canvas.getBoundingClientRect()
+    return {
+      x: (e.clientX - bounds.left) / bounds.width,
+      y: (e.clientY - bounds.top) / bounds.height
+    }
+  }
+
+  const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>): void => {
+    const point = pointerToNormalized(e)
+    if (!point) return
+    const rect = dveToScreenRect(dveRef.current)
+    const hit = hitTestBoxes([{ id: 0, rect }], point)
+    if (!hit) return
+    dragRef.current = { mode: hit.mode, corner: hit.corner, origin: { rect, pointer: point } }
+    e.currentTarget.setPointerCapture(e.pointerId)
+  }
+
+  const onPointerMove = (e: React.PointerEvent<HTMLCanvasElement>): void => {
+    const drag = dragRef.current
+    if (!drag) return
+    const point = pointerToNormalized(e)
+    if (!point) return
+    const rect = applyDrag(drag.origin, drag.mode, drag.corner, point, false)
+    const center = screenPositionToDveXY(rect.x + rect.width / 2, rect.y + rect.height / 2)
+    update({
+      positionX: Math.round(center.x),
+      positionY: Math.round(center.y),
+      sizeX: Math.round(screenSizeToDveSize(rect.width)),
+      sizeY: Math.round(screenSizeToDveSize(rect.height))
+    })
+  }
+
+  const onPointerUp = (e: React.PointerEvent<HTMLCanvasElement>): void => {
+    dragRef.current = null
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId)
+    }
   }
 
   return (
@@ -156,8 +231,15 @@ function DVEEditor({ snapshot, calibration }: Props): React.JSX.Element {
           <canvas ref={programCanvasRef} className="capture-canvas" />
         </div>
         <div className="ssrc-pane">
-          <h3>Preview (editing)</h3>
-          <canvas ref={previewCanvasRef} className="capture-canvas" />
+          <h3>Preview (editing) — drag to move, drag a corner to resize</h3>
+          <canvas
+            ref={previewCanvasRef}
+            className="capture-canvas ssrc-preview-canvas"
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerLeave={onPointerUp}
+          />
         </div>
       </div>
       <table className="ssrc-box-table">
