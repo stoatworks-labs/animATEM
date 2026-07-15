@@ -115,3 +115,14 @@ module's own compiled client code) connects, receives the initial status/
 snapshot/memories state, and round-trips commands against a running
 animATEM instance without errors. Like everything else, actual command
 behavior (cut/auto/recall) hasn't been checked against a real switcher yet.
+
+## ⚠️ Security note
+
+The local control server (`src/main/services/controlServer.ts`) binds to
+`127.0.0.1:51234` with **no authentication** — anything that can reach that
+port on the local machine can cut/auto/FTB the switcher or recall a memory.
+This is fine as long as it stays bound to localhost (the default, and the
+only configuration this app currently supports). If you ever change that
+binding to `0.0.0.0` or another network-reachable address, add
+authentication first — as shipped, it is not safe to expose beyond
+localhost.
