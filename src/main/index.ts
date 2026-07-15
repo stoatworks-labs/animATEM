@@ -3,7 +3,8 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { atemConnection } from './services/atemConnection'
 import { getCalibrationProfile, saveCalibrationProfile } from './services/calibrationStore'
-import type { AtemBoxLayout, AtemDveLayout, CalibrationProfile } from '../shared/protocol'
+import { deleteMemory, listMemories, saveMemory } from './services/memoryStore'
+import type { AtemBoxLayout, AtemDveLayout, CalibrationProfile, Memory } from '../shared/protocol'
 
 function createWindow(): BrowserWindow {
   const mainWindow = new BrowserWindow({
@@ -99,6 +100,10 @@ app.whenReady().then(() => {
   ipcMain.handle('calibration:save', (_e, profile: CalibrationProfile) =>
     saveCalibrationProfile(profile)
   )
+
+  ipcMain.handle('memory:list', () => listMemories())
+  ipcMain.handle('memory:save', (_e, memory: Memory) => saveMemory(memory))
+  ipcMain.handle('memory:delete', (_e, id: string) => deleteMemory(id))
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()

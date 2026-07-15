@@ -5,7 +5,8 @@ import type {
   AtemDveLayout,
   AtemSnapshot,
   CalibrationProfile,
-  ConnectionStatus
+  ConnectionStatus,
+  Memory
 } from '../shared/protocol'
 
 const api = {
@@ -59,6 +60,11 @@ const api = {
       ipcRenderer.invoke('calibration:get', resolutionKey),
     save: (profile: CalibrationProfile): Promise<void> =>
       ipcRenderer.invoke('calibration:save', profile)
+  },
+  memory: {
+    list: (): Promise<Memory[]> => ipcRenderer.invoke('memory:list'),
+    save: (memory: Memory): Promise<void> => ipcRenderer.invoke('memory:save', memory),
+    delete: (id: string): Promise<void> => ipcRenderer.invoke('memory:delete', id)
   }
 }
 

@@ -357,3 +357,81 @@ body {
   color: #e8e8ea;
   padding: 2px 6px;
 }
+
+.memory-bank {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid #24262b;
+  padding-top: 12px;
+}
+
+.memory-bank-save {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.memory-bank-save input {
+  background: #1a1c20;
+  border: 1px solid #2a2c31;
+  border-radius: 4px;
+  color: #e8e8ea;
+  padding: 4px 8px;
+  font-size: 12px;
+  width: 200px;
+}
+
+.memory-bank-save button {
+  background: #2a2c31;
+  border: 1px solid #34363c;
+  border-radius: 4px;
+  color: #e8e8ea;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.memory-bank-save button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.memory-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.memory-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #e8e8ea;
+  padding: 4px 8px;
+  background: #1a1c20;
+  border-radius: 4px;
+}
+
+.memory-list li span {
+  flex: 1;
+}
+
+.memory-list li button {
+  background: #2a2c31;
+  border: 1px solid #34363c;
+  border-radius: 4px;
+  color: #e8e8ea;
+  padding: 2px 8px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.memory-empty {
+  color: #6b6d73;
+  background: transparent !important;
+}

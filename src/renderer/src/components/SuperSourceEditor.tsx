@@ -3,9 +3,11 @@ import { captureManager } from '../capture/captureManager'
 import { SourceCompositor } from '../compositor/compositeCanvas'
 import { boxToCropFraction, boxToScreenRect } from '../compositor/superSourceCoords'
 import { normalizedToPixel } from '../compositor/boxGeometry'
+import MemoryBank from './MemoryBank'
 import type {
   AtemSnapshot,
   CalibrationProfile,
+  Memory,
   SuperSourceBoxState
 } from '../../../shared/protocol'
 
@@ -125,6 +127,11 @@ function SuperSourceEditor({ snapshot, calibration }: Props): React.JSX.Element 
     await window.api.atem.pushSuperSourceLayout({ boxes }, ssrcIndex)
   }
 
+  const recallMemory = (memory: Memory): void => {
+    if (memory.kind !== 'supersource') return
+    setBoxes([0, 1, 2, 3].map((i) => ({ ...emptyBox(i), ...memory.layout.boxes[i] })))
+  }
+
   return (
     <div className="ssrc-editor">
       <div className="ssrc-toolbar">
@@ -228,6 +235,17 @@ function SuperSourceEditor({ snapshot, calibration }: Props): React.JSX.Element 
         approximation (see README) pending real hardware to calibrate against. Take pushes these
         exact values regardless.
       </p>
+      <MemoryBank
+        filter={(m) => m.kind === 'supersource' && m.superSourceIndex === ssrcIndex}
+        onRecall={recallMemory}
+        buildMemory={(name) => ({
+          id: crypto.randomUUID(),
+          kind: 'supersource',
+          name,
+          superSourceIndex: ssrcIndex,
+          layout: { boxes }
+        })}
+      />
     </div>
   )
 }

@@ -3,9 +3,11 @@ import { captureManager } from '../capture/captureManager'
 import { SourceCompositor } from '../compositor/compositeCanvas'
 import { dveToCropFraction, dveToScreenRect } from '../compositor/dveCoords'
 import { normalizedToPixel } from '../compositor/boxGeometry'
+import MemoryBank from './MemoryBank'
 import type {
   AtemSnapshot,
   CalibrationProfile,
+  Memory,
   UpstreamKeyerDveState
 } from '../../../shared/protocol'
 
@@ -115,6 +117,11 @@ function DVEEditor({ snapshot, calibration }: Props): React.JSX.Element {
     await window.api.atem.pushUpstreamKeyerDve(dve, meIndex, keyerIndex)
   }
 
+  const recallMemory = (memory: Memory): void => {
+    if (memory.kind !== 'dve') return
+    setDve((prev) => ({ ...prev, ...memory.layout }))
+  }
+
   return (
     <div className="ssrc-editor">
       <div className="ssrc-toolbar">
@@ -222,6 +229,18 @@ function DVEEditor({ snapshot, calibration }: Props): React.JSX.Element {
           "Position/size are raw ATEM units — the preview's visual scale is an unverified approximation (see README) pending real hardware to calibrate against. Take pushes these exact values regardless."
         }
       </p>
+      <MemoryBank
+        filter={(m) => m.kind === 'dve' && m.meIndex === meIndex && m.keyerIndex === keyerIndex}
+        onRecall={recallMemory}
+        buildMemory={(name) => ({
+          id: crypto.randomUUID(),
+          kind: 'dve',
+          name,
+          meIndex,
+          keyerIndex,
+          layout: dve
+        })}
+      />
     </div>
   )
 }
