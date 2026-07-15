@@ -4,6 +4,7 @@ import type {
   AtemBoxLayout,
   AtemDveLayout,
   AtemSnapshot,
+  CalibrationProfile,
   ConnectionStatus
 } from '../shared/protocol'
 
@@ -52,6 +53,12 @@ const api = {
         ipcRenderer.removeListener('atem:error', listener)
       }
     }
+  },
+  calibration: {
+    get: (resolutionKey: string): Promise<CalibrationProfile | null> =>
+      ipcRenderer.invoke('calibration:get', resolutionKey),
+    save: (profile: CalibrationProfile): Promise<void> =>
+      ipcRenderer.invoke('calibration:save', profile)
   }
 }
 

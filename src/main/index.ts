@@ -2,7 +2,8 @@ import { app, BrowserWindow, ipcMain, session, shell } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { atemConnection } from './services/atemConnection'
-import type { AtemBoxLayout, AtemDveLayout } from '../shared/protocol'
+import { getCalibrationProfile, saveCalibrationProfile } from './services/calibrationStore'
+import type { AtemBoxLayout, AtemDveLayout, CalibrationProfile } from '../shared/protocol'
 
 function createWindow(): BrowserWindow {
   const mainWindow = new BrowserWindow({
@@ -90,6 +91,13 @@ app.whenReady().then(() => {
     'atem:push-dve',
     (_e, layout: AtemDveLayout, meIndex?: number, keyerIndex?: number) =>
       atemConnection.pushUpstreamKeyerDve(layout, meIndex, keyerIndex)
+  )
+
+  ipcMain.handle('calibration:get', (_e, resolutionKey: string) =>
+    getCalibrationProfile(resolutionKey)
+  )
+  ipcMain.handle('calibration:save', (_e, profile: CalibrationProfile) =>
+    saveCalibrationProfile(profile)
   )
 
   app.on('activate', function () {

@@ -151,3 +151,112 @@ body {
   font-size: 11px;
   max-width: 240px;
 }
+
+.view-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.view-tabs button {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: #9a9ca3;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.view-tabs button:hover {
+  background: #1a1c20;
+}
+
+.view-tabs button.active {
+  background: #2a2c31;
+  border-color: #34363c;
+  color: #e8e8ea;
+}
+
+.calibration-screen {
+  width: 100%;
+  max-width: 960px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.calibration-hint {
+  color: #9a9ca3;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.calibration-canvas {
+  cursor: crosshair;
+}
+
+.calibration-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.calibration-table th {
+  text-align: left;
+  color: #6b6d73;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-bottom: 1px solid #24262b;
+}
+
+.calibration-table td {
+  padding: 4px 8px;
+  border-bottom: 1px solid #1a1c20;
+  color: #e8e8ea;
+}
+
+.calibration-table input[type='number'] {
+  width: 56px;
+  background: #1a1c20;
+  border: 1px solid #2a2c31;
+  border-radius: 4px;
+  color: #e8e8ea;
+  padding: 2px 6px;
+}
+
+.calibration-table button {
+  background: #2a2c31;
+  border: 1px solid #34363c;
+  border-radius: 4px;
+  color: #e8e8ea;
+  padding: 2px 8px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.calibration-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.calibration-actions button {
+  background: #2a2c31;
+  border: 1px solid #34363c;
+  border-radius: 4px;
+  color: #e8e8ea;
+  padding: 6px 14px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.calibration-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.calibration-saved {
+  color: #4ade80;
+  font-size: 12px;
+}
