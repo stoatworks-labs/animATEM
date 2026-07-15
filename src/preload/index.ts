@@ -1,6 +1,11 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import type { AtemSnapshot, ConnectionStatus } from '../shared/protocol'
+import type {
+  AtemBoxLayout,
+  AtemDveLayout,
+  AtemSnapshot,
+  ConnectionStatus
+} from '../shared/protocol'
 
 const api = {
   atem: {
@@ -8,6 +13,22 @@ const api = {
     disconnect: (): Promise<void> => ipcRenderer.invoke('atem:disconnect'),
     getStatus: (): Promise<ConnectionStatus> => ipcRenderer.invoke('atem:status'),
     getSnapshot: (): Promise<AtemSnapshot | null> => ipcRenderer.invoke('atem:snapshot'),
+    cut: (me?: number): Promise<void> => ipcRenderer.invoke('atem:cut', me),
+    auto: (me?: number): Promise<void> => ipcRenderer.invoke('atem:auto', me),
+    ftb: (me?: number): Promise<void> => ipcRenderer.invoke('atem:ftb', me),
+    setProgram: (input: number, me?: number): Promise<void> =>
+      ipcRenderer.invoke('atem:program', input, me),
+    setPreview: (input: number, me?: number): Promise<void> =>
+      ipcRenderer.invoke('atem:preview', input, me),
+    setAux: (source: number, bus?: number): Promise<void> =>
+      ipcRenderer.invoke('atem:aux', source, bus),
+    pushSuperSourceLayout: (layout: AtemBoxLayout, ssrcId?: number): Promise<void> =>
+      ipcRenderer.invoke('atem:push-supersource', layout, ssrcId),
+    pushUpstreamKeyerDve: (
+      layout: AtemDveLayout,
+      meIndex?: number,
+      keyerIndex?: number
+    ): Promise<void> => ipcRenderer.invoke('atem:push-dve', layout, meIndex, keyerIndex),
     onStatus: (callback: (status: ConnectionStatus) => void) => {
       const listener = (_e: Electron.IpcRendererEvent, status: ConnectionStatus): void =>
         callback(status)
@@ -22,6 +43,13 @@ const api = {
       ipcRenderer.on('atem:snapshot', listener)
       return (): void => {
         ipcRenderer.removeListener('atem:snapshot', listener)
+      }
+    },
+    onError: (callback: (message: string) => void) => {
+      const listener = (_e: Electron.IpcRendererEvent, message: string): void => callback(message)
+      ipcRenderer.on('atem:error', listener)
+      return (): void => {
+        ipcRenderer.removeListener('atem:error', listener)
       }
     }
   }

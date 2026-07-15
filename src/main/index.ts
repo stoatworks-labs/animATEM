@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain, session, shell } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { atemConnection } from './services/atemConnection'
+import type { AtemBoxLayout, AtemDveLayout } from '../shared/protocol'
 
 function createWindow(): BrowserWindow {
   const mainWindow = new BrowserWindow({
@@ -63,11 +64,33 @@ app.whenReady().then(() => {
   atemConnection.on('snapshot', (snapshot) =>
     mainWindow.webContents.send('atem:snapshot', snapshot)
   )
+  atemConnection.on('error', (message) => mainWindow.webContents.send('atem:error', message))
 
   ipcMain.handle('atem:connect', (_e, host: string) => atemConnection.connect(host))
   ipcMain.handle('atem:disconnect', () => atemConnection.disconnect())
   ipcMain.handle('atem:status', () => atemConnection.getStatus())
   ipcMain.handle('atem:snapshot', () => atemConnection.getSnapshot())
+
+  ipcMain.handle('atem:cut', (_e, me?: number) => atemConnection.cut(me))
+  ipcMain.handle('atem:auto', (_e, me?: number) => atemConnection.autoTransition(me))
+  ipcMain.handle('atem:ftb', (_e, me?: number) => atemConnection.fadeToBlack(me))
+  ipcMain.handle('atem:program', (_e, input: number, me?: number) =>
+    atemConnection.changeProgramInput(input, me)
+  )
+  ipcMain.handle('atem:preview', (_e, input: number, me?: number) =>
+    atemConnection.changePreviewInput(input, me)
+  )
+  ipcMain.handle('atem:aux', (_e, source: number, bus?: number) =>
+    atemConnection.setAuxSource(source, bus)
+  )
+  ipcMain.handle('atem:push-supersource', (_e, layout: AtemBoxLayout, ssrcId?: number) =>
+    atemConnection.pushSuperSourceLayout(layout, ssrcId)
+  )
+  ipcMain.handle(
+    'atem:push-dve',
+    (_e, layout: AtemDveLayout, meIndex?: number, keyerIndex?: number) =>
+      atemConnection.pushUpstreamKeyerDve(layout, meIndex, keyerIndex)
+  )
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()

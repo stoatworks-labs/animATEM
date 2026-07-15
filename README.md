@@ -39,6 +39,25 @@ npm run dev
 
 `npm run typecheck` and `npm run lint` before committing.
 
+**Known install gotcha on this machine (Node v26.5.0):** `electron`'s
+postinstall uses `extract-zip@2.0.1`, whose promise hangs forever on this
+Node version instead of extracting or erroring — `npm install` finishes
+but `node_modules/electron/dist` is left with no `Electron.app`, and `npm
+run dev` fails with `spawn .../Electron ENOENT`. If that happens:
+
+```sh
+# find the cached zip extract-zip already downloaded
+find ~/Library/Caches/electron -iname "electron-v*.zip"
+
+# extract it with the system unzip instead (fast, doesn't hang)
+rm -rf node_modules/electron/dist
+mkdir -p node_modules/electron/dist
+unzip -q <path-to-the-zip-above> -d node_modules/electron/dist
+
+# recreate the marker file install.js normally writes (no trailing newline!)
+printf "Electron.app/Contents/MacOS/Electron" > node_modules/electron/path.txt
+```
+
 ## Status
 
 Phase 1 scaffold in progress — see the project plan for current scope.

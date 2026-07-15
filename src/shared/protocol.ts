@@ -17,6 +17,10 @@ export interface MixEffectState {
   inTransition: boolean
 }
 
+// Field names below deliberately mirror atem-connection's own state shape
+// (SuperSourceBox / UpstreamKeyerDVESettings) so IPC payloads can be passed
+// through main <-> renderer without a translation layer.
+
 export interface SuperSourceBoxState {
   index: number
   enabled: boolean
@@ -39,16 +43,28 @@ export interface SuperSourceState {
 export interface UpstreamKeyerDveState {
   meIndex: number
   keyerIndex: number
-  enabled: boolean
+  onAir: boolean
   fillSource: number
-  x: number
-  y: number
+  cutSource: number
+  positionX: number
+  positionY: number
   sizeX: number
   sizeY: number
-  cropTop: number
-  cropBottom: number
-  cropLeft: number
-  cropRight: number
+  maskEnabled: boolean
+  maskTop: number
+  maskBottom: number
+  maskLeft: number
+  maskRight: number
+}
+
+export interface MultiViewerWindowState {
+  windowIndex: number
+  source: number
+}
+
+export interface MultiViewerState {
+  index: number
+  windows: MultiViewerWindowState[]
 }
 
 export interface AtemSnapshot {
@@ -58,6 +74,7 @@ export interface AtemSnapshot {
   superSources: SuperSourceState[]
   upstreamKeyerDves: UpstreamKeyerDveState[]
   auxes: Record<number, number>
+  multiViewers: MultiViewerState[]
 }
 
 export type AtemBoxLayout = { boxes: Partial<SuperSourceBoxState>[] }
@@ -93,14 +110,21 @@ export interface BoxRect {
 }
 
 export interface CalibratedBox {
-  /** ATEM input id this multiview box shows — assigned by the operator during calibration, since the Mini-series multiview layout isn't reassignable/queryable via the protocol. */
-  atemInputId: number
-  label: string
+  /**
+   * Which multiviewer window (settings.multiViewers[mv].windows[windowIndex])
+   * this rect corresponds to. The *source* assigned to that window is read
+   * live from ATEM state (state.settings.multiViewers[mv].windows[windowIndex].source)
+   * rather than stored here, so recalibration isn't needed when the operator
+   * reassigns a window's source from the switcher's own control panel — only
+   * the box's pixel rect (fixed by the multiview layout) needs calibrating.
+   */
+  windowIndex: number
   rect: BoxRect
 }
 
 export interface CalibrationProfile {
   /** Keyed by `${captureWidth}x${captureHeight}` so a different capture resolution gets its own calibration. */
   resolutionKey: string
+  multiViewerIndex: number
   boxes: CalibratedBox[]
 }

@@ -70,4 +70,51 @@ body {
   justify-content: center;
   color: #6b6d73;
   font-size: 13px;
+  overflow: auto;
+  padding: 16px;
+}
+
+.snapshot-dump {
+  align-self: flex-start;
+  color: #9a9ca3;
+  font-size: 11px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.connection-settings {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.connection-settings input {
+  background: #1a1c20;
+  border: 1px solid #2a2c31;
+  border-radius: 4px;
+  color: #e8e8ea;
+  padding: 4px 8px;
+  font-size: 12px;
+  width: 160px;
+}
+
+.connection-settings button {
+  background: #2a2c31;
+  border: 1px solid #34363c;
+  border-radius: 4px;
+  color: #e8e8ea;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.connection-settings button:hover {
+  background: #34363c;
+}
+
+.connection-error {
+  color: #f87171;
+  font-size: 11px;
+  max-width: 240px;
 }
