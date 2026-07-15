@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { AtemSnapshot, ConnectionStatus } from '../../shared/protocol'
 import ConnectionSettings from './components/ConnectionSettings'
+import CaptureDevicePicker from './components/CaptureDevicePicker'
 
 function App(): React.JSX.Element {
   const [status, setStatus] = useState<ConnectionStatus>('disconnected')
@@ -28,6 +29,7 @@ function App(): React.JSX.Element {
         <ConnectionSettings status={status} lastError={lastError} />
       </header>
       <div className="app-body">
+        <CaptureDevicePicker />
         {snapshot ? (
           <pre className="snapshot-dump">{JSON.stringify(snapshot, null, 2)}</pre>
         ) : (
