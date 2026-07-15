@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { listVideoInputs, UvcCapture } from '../capture/uvcCapture'
+import { captureManager } from '../capture/captureManager'
+import { useCaptureState } from '../capture/useCaptureState'
 import { normalizedToPixel, rectFromCorners, resolutionKey } from '../compositor/boxGeometry'
 import type { AtemSnapshot, CalibratedBox } from '../../../shared/protocol'
 
@@ -26,17 +27,11 @@ function sourceNameForWindow(snapshot: AtemSnapshot | null, windowIndex: number)
 }
 
 function CalibrationScreen({ snapshot, onSaved }: Props): React.JSX.Element {
-  const [devices, setDevices] = useState<MediaDeviceInfo[]>([])
-  const [selectedId, setSelectedId] = useState('')
+  const { frameSize } = useCaptureState()
   const [boxes, setBoxes] = useState<CalibratedBox[]>([])
-  const [frameSize, setFrameSize] = useState<{ width: number; height: number } | null>(null)
-  const [error, setError] = useState<string | null>(null)
   const [saved, setSaved] = useState(false)
 
-  const captureRef = useRef(new UvcCapture())
-  const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const rafRef = useRef<number | null>(null)
   const dragRef = useRef<DragState | null>(null)
   const boxesRef = useRef<CalibratedBox[]>([])
 
@@ -45,61 +40,12 @@ function CalibrationScreen({ snapshot, onSaved }: Props): React.JSX.Element {
   }, [boxes])
 
   useEffect(() => {
-    navigator.mediaDevices
-      .getUserMedia({ video: true })
-      .then((stream) => stream.getTracks().forEach((t) => t.stop()))
-      .catch(() => {})
-      .finally(() => {
-        listVideoInputs().then(setDevices)
-      })
-  }, [])
-
-  useEffect(() => {
-    const capture = captureRef.current
-    return () => {
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current)
-      capture.stop()
-    }
-  }, [])
-
-  useEffect(() => {
     if (!frameSize) return
     const key = resolutionKey(frameSize.width, frameSize.height)
     window.api.calibration.get(key).then((profile) => {
       if (profile) setBoxes(profile.boxes)
     })
   }, [frameSize])
-
-  const start = async (deviceId: string): Promise<void> => {
-    setError(null)
-    try {
-      const stream = await captureRef.current.start(deviceId)
-      const video = videoRef.current
-      if (!video) return
-      video.srcObject = stream
-      await video.play()
-
-      const draw = (): void => {
-        const canvas = canvasRef.current
-        if (canvas && video.videoWidth > 0) {
-          if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) {
-            canvas.width = video.videoWidth
-            canvas.height = video.videoHeight
-            setFrameSize({ width: video.videoWidth, height: video.videoHeight })
-          }
-          const ctx = canvas.getContext('2d')
-          if (ctx) {
-            ctx.drawImage(video, 0, 0)
-            drawOverlay(ctx, canvas.width, canvas.height)
-          }
-        }
-        rafRef.current = requestAnimationFrame(draw)
-      }
-      draw()
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err))
-    }
-  }
 
   const drawOverlay = (
     ctx: CanvasRenderingContext2D,
@@ -126,6 +72,22 @@ function CalibrationScreen({ snapshot, onSaved }: Props): React.JSX.Element {
       )
     }
   }
+
+  useEffect(() => {
+    return captureManager.onFrame(() => {
+      const canvas = canvasRef.current
+      const video = captureManager.getVideo()
+      if (!canvas) return
+      if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) {
+        canvas.width = video.videoWidth
+        canvas.height = video.videoHeight
+      }
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
+      ctx.drawImage(video, 0, 0)
+      drawOverlay(ctx, canvas.width, canvas.height)
+    })
+  }, [])
 
   const canvasPoint = (e: React.MouseEvent<HTMLCanvasElement>): { x: number; y: number } | null => {
     const canvas = canvasRef.current
@@ -204,24 +166,6 @@ function CalibrationScreen({ snapshot, onSaved }: Props): React.JSX.Element {
           "Draw a rectangle around each multiview box, then confirm its window number matches the ATEM's own multiview layout (window numbering runs left-to-right, top-to-bottom). If connected, the live source assigned to that window is shown for reference."
         }
       </p>
-      <div className="capture-picker-controls">
-        <select
-          value={selectedId}
-          onChange={(e) => {
-            setSelectedId(e.target.value)
-            if (e.target.value) void start(e.target.value)
-          }}
-        >
-          <option value="">{"Select the ATEM's UVC multiview device…"}</option>
-          {devices.map((d) => (
-            <option key={d.deviceId} value={d.deviceId}>
-              {d.label || `Camera ${d.deviceId.slice(0, 8)}`}
-            </option>
-          ))}
-        </select>
-        {error && <span className="connection-error">{error}</span>}
-      </div>
-      <video ref={videoRef} muted playsInline style={{ display: 'none' }} />
       <canvas
         ref={canvasRef}
         className="capture-canvas calibration-canvas"

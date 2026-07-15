@@ -260,3 +260,100 @@ body {
   color: #4ade80;
   font-size: 12px;
 }
+
+.ssrc-editor {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ssrc-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ssrc-toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #9a9ca3;
+  font-size: 12px;
+}
+
+.ssrc-toolbar select,
+.ssrc-box-table select {
+  background: #1a1c20;
+  border: 1px solid #2a2c31;
+  border-radius: 4px;
+  color: #e8e8ea;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.ssrc-toolbar button {
+  background: #2a2c31;
+  border: 1px solid #34363c;
+  border-radius: 4px;
+  color: #e8e8ea;
+  padding: 6px 14px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.ssrc-toolbar button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ssrc-toolbar .take-button {
+  margin-left: auto;
+  background: #133a1f;
+  border-color: #1e5631;
+  color: #4ade80;
+  font-weight: 600;
+}
+
+.ssrc-panes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ssrc-pane h3 {
+  font-size: 12px;
+  font-weight: 500;
+  color: #9a9ca3;
+  margin: 0 0 6px;
+}
+
+.ssrc-box-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.ssrc-box-table th {
+  text-align: left;
+  color: #6b6d73;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-bottom: 1px solid #24262b;
+}
+
+.ssrc-box-table td {
+  padding: 4px 8px;
+  border-bottom: 1px solid #1a1c20;
+  color: #e8e8ea;
+}
+
+.ssrc-box-table input[type='number'] {
+  width: 64px;
+  background: #1a1c20;
+  border: 1px solid #2a2c31;
+  border-radius: 4px;
+  color: #e8e8ea;
+  padding: 2px 6px;
+}
