@@ -1,5 +1,9 @@
 # animATEM
 
+> **AI-assisted project.** This codebase was created with [Claude Code](https://claude.com/claude-code)
+> (Anthropic), directed and reviewed by a human author. It has not yet been
+> validated against real ATEM hardware.
+
 Network control for Blackmagic ATEM switchers (Mini Pro/Extreme ISO family,
 Phase 1), with standard PGM/PVW switching plus a software-composited
 preview/program workflow for SuperSource and DVE box layouts.
@@ -11,10 +15,6 @@ software, and recomposites them into an arbitrary custom arrangement to
 preview SuperSource/DVE changes with real live pixels before they're pushed
 to air. Named "memories" — app-level presets, independent of the ATEM's own
 macro system — capture and recall these arrangements.
-
-> This project's code is being written with AI assistance (Claude Code),
-> reviewed by a human. It has not yet been validated against real ATEM
-> hardware.
 
 A companion [Bitfocus Companion](https://bitfocus.io/companion) module lives
 in [`companion-module/`](companion-module/README.md) — it lets Companion
@@ -126,3 +126,9 @@ only configuration this app currently supports). If you ever change that
 binding to `0.0.0.0` or another network-reachable address, add
 authentication first — as shipped, it is not safe to expose beyond
 localhost.
+
+## Roadmap / TODO
+
+- [ ] **Validate against a real ATEM** — run the full compositing workflow and cut/auto/recall command behavior against a real Mini Pro/Extreme ISO (everything so far is verified only in browser/Electron harnesses).
+- [ ] **Calibrate coordinate scale** — the SuperSource/DVE Preview layout scale (`superSourceCoords.ts` / `dveCoords.ts`) is a labeled placeholder pending real hardware to calibrate against.
+- [ ] **Real multiview capture** — the UVC capture path has only been exercised against a generic webcam, not a real ATEM's multiview output.
