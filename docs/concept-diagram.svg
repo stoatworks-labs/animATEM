@@ -1,0 +1,84 @@
+<svg viewBox="0 0 1180 620" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4ade80" />
+    </marker>
+    <marker id="arrowDim" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6b6d73" />
+    </marker>
+  </defs>
+
+  <rect width="1180" height="620" fill="#0f1013" />
+
+  <!-- ATEM switcher -->
+  <rect x="40" y="240" width="170" height="120" rx="8" fill="#1a1c20" stroke="#2a2c31" stroke-width="2" />
+  <text x="125" y="290" fill="#e8e8ea" font-size="16" font-weight="600" text-anchor="middle">ATEM</text>
+  <text x="125" y="312" fill="#e8e8ea" font-size="16" font-weight="600" text-anchor="middle">Switcher</text>
+  <text x="125" y="336" fill="#6b6d73" font-size="11" text-anchor="middle">Mini Pro / Extreme ISO</text>
+
+  <!-- Ethernet control path (top) -->
+  <path d="M210,265 H320" stroke="#6b6d73" stroke-width="1.5" fill="none" marker-end="url(#arrowDim)" />
+  <text x="265" y="255" fill="#6b6d73" font-size="10" text-anchor="middle">Ethernet (control)</text>
+
+  <!-- USB multiview path (bottom) -->
+  <path d="M210,335 H320" stroke="#4ade80" stroke-width="1.5" fill="none" marker-end="url(#arrow)" />
+  <text x="265" y="325" fill="#4ade80" font-size="10" text-anchor="middle">USB (UVC multiview)</text>
+
+  <!-- animATEM outer boundary -->
+  <rect x="320" y="70" width="800" height="440" rx="10" fill="none" stroke="#24262b" stroke-width="1.5" stroke-dasharray="4 4" />
+  <text x="340" y="96" fill="#9a9ca3" font-size="12" font-weight="600" letter-spacing="0.04em">animATEM</text>
+
+  <!-- Step 1: capture -->
+  <rect x="355" y="290" width="150" height="90" rx="8" fill="#1a1c20" stroke="#2a2c31" stroke-width="2" />
+  <text x="430" y="325" fill="#e8e8ea" font-size="13" font-weight="600" text-anchor="middle">1. Capture</text>
+  <text x="430" y="343" fill="#6b6d73" font-size="10" text-anchor="middle">raw multiview frame</text>
+  <text x="430" y="358" fill="#6b6d73" font-size="10" text-anchor="middle">(getUserMedia)</text>
+
+  <path d="M505,335 H565" stroke="#4ade80" stroke-width="1.5" fill="none" marker-end="url(#arrow)" />
+
+  <!-- Step 2: crop -->
+  <rect x="565" y="290" width="150" height="90" rx="8" fill="#1a1c20" stroke="#2a2c31" stroke-width="2" />
+  <text x="640" y="318" fill="#e8e8ea" font-size="13" font-weight="600" text-anchor="middle">2. Per-box crop</text>
+  <text x="640" y="336" fill="#6b6d73" font-size="10" text-anchor="middle">calibrated regions +</text>
+  <text x="640" y="351" fill="#6b6d73" font-size="10" text-anchor="middle">live window→source</text>
+
+  <!-- branch up to Program -->
+  <path d="M715,310 H745 V180 H775" stroke="#6b6d73" stroke-width="1.5" fill="none" marker-end="url(#arrowDim)" />
+  <!-- branch down to Preview -->
+  <path d="M715,360 H745 V420 H775" stroke="#4ade80" stroke-width="1.5" fill="none" marker-end="url(#arrow)" />
+
+  <!-- Program pane -->
+  <rect x="775" y="135" width="160" height="90" rx="8" fill="#1a1c20" stroke="#2a2c31" stroke-width="2" />
+  <text x="855" y="168" fill="#e8e8ea" font-size="13" font-weight="600" text-anchor="middle">Program</text>
+  <text x="855" y="186" fill="#6b6d73" font-size="10" text-anchor="middle">live switcher state,</text>
+  <text x="855" y="201" fill="#6b6d73" font-size="10" text-anchor="middle">read-only</text>
+
+  <!-- Preview pane -->
+  <rect x="775" y="375" width="160" height="90" rx="8" fill="#1a1c20" stroke="#4ade80" stroke-width="2" />
+  <text x="855" y="405" fill="#4ade80" font-size="13" font-weight="600" text-anchor="middle">Preview</text>
+  <text x="855" y="423" fill="#9a9ca3" font-size="10" text-anchor="middle">editable — drag boxes</text>
+  <text x="855" y="438" fill="#9a9ca3" font-size="10" text-anchor="middle">to move/resize</text>
+
+  <!-- Memories -->
+  <rect x="775" y="490" width="160" height="55" rx="8" fill="#1a1c20" stroke="#2a2c31" stroke-width="1.5" />
+  <text x="855" y="513" fill="#e8e8ea" font-size="11" font-weight="600" text-anchor="middle">Memories</text>
+  <text x="855" y="529" fill="#6b6d73" font-size="9" text-anchor="middle">named presets, save/recall</text>
+  <path d="M855,490 V465" stroke="#6b6d73" stroke-width="1.5" fill="none" marker-end="url(#arrowDim)" />
+
+  <!-- Take -->
+  <path d="M935,420 H985" stroke="#4ade80" stroke-width="1.5" fill="none" marker-end="url(#arrow)" />
+  <rect x="985" y="375" width="110" height="90" rx="8" fill="#133a1f" stroke="#1e5631" stroke-width="2" />
+  <text x="1040" y="415" fill="#4ade80" font-size="14" font-weight="700" text-anchor="middle">Take</text>
+  <text x="1040" y="435" fill="#4ade80" font-size="9" text-anchor="middle" opacity="0.8">pushes to switcher</text>
+
+  <!-- Take back to ATEM (long path along bottom) -->
+  <path d="M1040,465 V585 H125 V360" stroke="#4ade80" stroke-width="1.5" fill="none" marker-end="url(#arrow)" />
+  <text x="580" y="600" fill="#4ade80" font-size="10" text-anchor="middle">setSuperSourceBoxSettings / setUpstreamKeyerDVESettings (Ethernet)</text>
+
+  <!-- Touch UI note -->
+  <rect x="355" y="135" width="380" height="90" rx="8" fill="#1a1c20" stroke="#2a2c31" stroke-width="1.5" stroke-dasharray="3 3" />
+  <text x="545" y="163" fill="#9a9ca3" font-size="12" font-weight="600" text-anchor="middle">Touch UI</text>
+  <text x="545" y="182" fill="#6b6d73" font-size="10" text-anchor="middle">tap a composited multiview region to select</text>
+  <text x="545" y="197" fill="#6b6d73" font-size="10" text-anchor="middle">PVW/PGM, function keys for Cut/Auto/FTB</text>
+  <path d="M545,225 V290" stroke="#6b6d73" stroke-width="1.5" fill="none" stroke-dasharray="3 3" />
+</svg>

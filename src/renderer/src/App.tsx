@@ -12,11 +12,18 @@ import TouchScreen from './components/TouchScreen'
 
 type View = 'touch' | 'live' | 'calibrate' | 'supersource' | 'dve'
 
+const VALID_VIEWS: View[] = ['touch', 'live', 'calibrate', 'supersource', 'dve']
+
+function initialViewFromUrl(): View {
+  const requested = new URLSearchParams(window.location.search).get('view')
+  return VALID_VIEWS.includes(requested as View) ? (requested as View) : 'touch'
+}
+
 function App(): React.JSX.Element {
   const [status, setStatus] = useState<ConnectionStatus>('disconnected')
   const [snapshot, setSnapshot] = useState<AtemSnapshot | null>(null)
   const [lastError, setLastError] = useState<string | null>(null)
-  const [view, setView] = useState<View>('touch')
+  const [view, setView] = useState<View>(initialViewFromUrl)
   const [calibrationVersion, setCalibrationVersion] = useState(0)
 
   const { frameSize } = useCaptureState()
