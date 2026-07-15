@@ -7,8 +7,9 @@ import CaptureDevicePicker from './components/CaptureDevicePicker'
 import LiveMultiviewPreview from './components/LiveMultiviewPreview'
 import CalibrationScreen from './components/CalibrationScreen'
 import SuperSourceEditor from './components/SuperSourceEditor'
+import DVEEditor from './components/DVEEditor'
 
-type View = 'live' | 'calibrate' | 'supersource'
+type View = 'live' | 'calibrate' | 'supersource' | 'dve'
 
 function App(): React.JSX.Element {
   const [status, setStatus] = useState<ConnectionStatus>('disconnected')
@@ -54,6 +55,9 @@ function App(): React.JSX.Element {
           >
             SuperSource
           </button>
+          <button className={view === 'dve' ? 'active' : ''} onClick={() => setView('dve')}>
+            DVE
+          </button>
         </nav>
         <CaptureDevicePicker />
         <ConnectionSettings status={status} lastError={lastError} />
@@ -78,6 +82,7 @@ function App(): React.JSX.Element {
         {view === 'supersource' && (
           <SuperSourceEditor snapshot={snapshot} calibration={calibration} />
         )}
+        {view === 'dve' && <DVEEditor snapshot={snapshot} calibration={calibration} />}
       </div>
     </div>
   )
