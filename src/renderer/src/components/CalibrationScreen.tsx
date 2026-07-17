@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { captureManager } from '../capture/captureManager'
 import { useCaptureState } from '../capture/useCaptureState'
 import { normalizedToPixel, rectFromCorners, resolutionKey } from '../compositor/boxGeometry'
-import type { AtemSnapshot, CalibratedBox } from '../../../shared/protocol'
+import type { AtemSnapshot, CalibratedBox, MultiViewerWindowState } from '../../../shared/protocol'
 
 interface Props {
   snapshot: AtemSnapshot | null
@@ -17,13 +17,20 @@ interface DragState {
 }
 
 const MULTI_VIEWER_INDEX = 0
+const UNASSIGNED = -1
+
+function liveWindows(snapshot: AtemSnapshot | null): MultiViewerWindowState[] {
+  return snapshot?.multiViewers.find((m) => m.index === MULTI_VIEWER_INDEX)?.windows ?? []
+}
+
+function sourceNameForInput(snapshot: AtemSnapshot | null, inputId: number): string {
+  const input = snapshot?.inputs.find((i) => i.id === inputId)
+  return input ? input.shortName : `input ${inputId}`
+}
 
 function sourceNameForWindow(snapshot: AtemSnapshot | null, windowIndex: number): string | null {
-  const mv = snapshot?.multiViewers.find((m) => m.index === MULTI_VIEWER_INDEX)
-  const win = mv?.windows.find((w) => w.windowIndex === windowIndex)
-  if (!win) return null
-  const input = snapshot?.inputs.find((i) => i.id === win.source)
-  return input ? input.shortName : `input ${win.source}`
+  const win = liveWindows(snapshot).find((w) => w.windowIndex === windowIndex)
+  return win ? sourceNameForInput(snapshot, win.source) : null
 }
 
 function CalibrationScreen({ snapshot, onSaved }: Props): React.JSX.Element {
@@ -34,10 +41,15 @@ function CalibrationScreen({ snapshot, onSaved }: Props): React.JSX.Element {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const dragRef = useRef<DragState | null>(null)
   const boxesRef = useRef<CalibratedBox[]>([])
+  const snapshotRef = useRef(snapshot)
 
   useEffect(() => {
     boxesRef.current = boxes
   }, [boxes])
+
+  useEffect(() => {
+    snapshotRef.current = snapshot
+  }, [snapshot])
 
   useEffect(() => {
     if (!frameSize) return
@@ -52,14 +64,15 @@ function CalibrationScreen({ snapshot, onSaved }: Props): React.JSX.Element {
     frameWidth: number,
     frameHeight: number
   ): void => {
-    ctx.strokeStyle = '#4ade80'
     ctx.lineWidth = 2
     ctx.font = '16px sans-serif'
-    ctx.fillStyle = '#4ade80'
     for (const box of boxesRef.current) {
       const px = normalizedToPixel(box.rect, frameWidth, frameHeight)
+      const label = sourceNameForWindow(snapshotRef.current, box.windowIndex)
+      ctx.strokeStyle = label ? '#4ade80' : '#f87171'
+      ctx.fillStyle = ctx.strokeStyle
       ctx.strokeRect(px.x, px.y, px.width, px.height)
-      ctx.fillText(`#${box.windowIndex}`, px.x + 4, px.y + 18)
+      ctx.fillText(label ?? 'unassigned', px.x + 4, px.y + 18)
     }
     const drag = dragRef.current
     if (drag) {
@@ -129,11 +142,14 @@ function CalibrationScreen({ snapshot, onSaved }: Props): React.JSX.Element {
       canvas.width,
       canvas.height
     )
-    const nextWindowIndex =
-      boxesRef.current.length === 0
-        ? 0
-        : Math.max(...boxesRef.current.map((b) => b.windowIndex)) + 1
-    setBoxes((prev) => [...prev, { windowIndex: nextWindowIndex, rect }])
+    // Best-effort default: the first live window not already claimed by
+    // another box. The operator confirms/corrects it from the dropdown by
+    // matching what's actually pictured — window *numbering* order is not
+    // trusted (it doesn't match visual grid position on at least some
+    // models/layouts, confirmed against real hardware).
+    const usedIndexes = new Set(boxesRef.current.map((b) => b.windowIndex))
+    const suggestion = liveWindows(snapshotRef.current).find((w) => !usedIndexes.has(w.windowIndex))
+    setBoxes((prev) => [...prev, { windowIndex: suggestion?.windowIndex ?? UNASSIGNED, rect }])
     setSaved(false)
   }
 
@@ -159,11 +175,13 @@ function CalibrationScreen({ snapshot, onSaved }: Props): React.JSX.Element {
     onSaved?.(key, boxes)
   }
 
+  const windows = liveWindows(snapshot)
+
   return (
     <div className="calibration-screen">
       <p className="calibration-hint">
         {
-          "Draw a rectangle around each multiview box, then confirm its window number matches the ATEM's own multiview layout (window numbering runs left-to-right, top-to-bottom). If connected, the live source assigned to that window is shown for reference."
+          'Draw a rectangle around each multiview box, then pick which live source it shows from the dropdown — match by what you can actually see in the box, not a guessed number. Connect to the ATEM first so the dropdown has real sources to pick from.'
         }
       </p>
       <canvas
@@ -177,28 +195,40 @@ function CalibrationScreen({ snapshot, onSaved }: Props): React.JSX.Element {
       <table className="calibration-table">
         <thead>
           <tr>
-            <th>Window</th>
-            <th>Live source</th>
+            <th>Box</th>
+            <th>This box shows…</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           {boxes.map((box, index) => (
             <tr key={index}>
+              <td>#{index + 1}</td>
               <td>
-                <input
-                  type="number"
-                  min={0}
+                <select
                   value={box.windowIndex}
                   onChange={(e) => updateWindowIndex(index, Number(e.target.value))}
-                />
+                >
+                  <option value={UNASSIGNED}>{'Select the source shown in this box…'}</option>
+                  {windows.map((w) => (
+                    <option key={w.windowIndex} value={w.windowIndex}>
+                      {sourceNameForInput(snapshot, w.source)}
+                    </option>
+                  ))}
+                </select>
               </td>
-              <td>{sourceNameForWindow(snapshot, box.windowIndex) ?? '—'}</td>
               <td>
                 <button onClick={() => removeBox(index)}>Remove</button>
               </td>
             </tr>
           ))}
+          {boxes.length === 0 && (
+            <tr>
+              <td colSpan={3} className="calibration-empty">
+                Draw a box on the picture above to get started.
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
       <div className="calibration-actions">

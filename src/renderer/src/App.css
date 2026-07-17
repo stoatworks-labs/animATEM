@@ -289,13 +289,14 @@ body {
   color: #e8e8ea;
 }
 
-.calibration-table input[type='number'] {
-  width: 56px;
+.calibration-table select {
   background: #1a1c20;
   border: 1px solid #2a2c31;
   border-radius: 4px;
   color: #e8e8ea;
   padding: 2px 6px;
+  font-size: 12px;
+  min-width: 180px;
 }
 
 .calibration-table button {
@@ -306,6 +307,12 @@ body {
   padding: 2px 8px;
   font-size: 11px;
   cursor: pointer;
+}
+
+.calibration-empty {
+  color: #6b6d73;
+  text-align: center;
+  padding: 16px 8px;
 }
 
 .calibration-actions {
