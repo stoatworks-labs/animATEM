@@ -30,13 +30,15 @@ program/preview input.
 
 ## Screenshots
 
+The multiview boxes below are a synthetic test-pattern feed (colour bars, big numbers, source labels), not a real ATEM's output — a stand-in so these screenshots don't depend on hardware being connected. Everything else — the app chrome, data tables, and layouts — is the real UI.
+
 The touchscreen operator view — a composited multiview with tap-to-select regions and a function key row below it:
 
 ![Touch tab: composited multiview canvas with Tap → PVW/PGM, Cut, Auto, FTB, and Kiosk function keys](docs/screenshots/touch.png)
 
-The calibration screen, where an operator draws each multiview box's region once per capture resolution:
+The calibration screen, where an operator draws each multiview box's region once per capture resolution — or auto-creates a starting grid sized to the live window count and drags boxes/corners into place:
 
-![Calibrate tab: instructions and a canvas for drawing multiview box regions, with a window/live-source table below](docs/screenshots/calibrate.png)
+![Calibrate tab: instructions, an auto-create-boxes button, a canvas showing calibrated multiview box regions, and a window/live-source table below](docs/screenshots/calibrate.png)
 
 The SuperSource editor — Program (live) and Preview (editable, drag to move/resize) panes side by side, plus the memory bank:
 
