@@ -2,9 +2,10 @@
 
 A [Bitfocus Companion](https://bitfocus.io/companion) module for
 [animATEM](../README.md) — lets Companion buttons trigger Cut/Auto/FTB,
-source selection, and memory recall against an ATEM switcher via animATEM's
-local control server, and shows feedback/variables for the current
-program/preview input and connection status.
+source selection, memory recall, and animated SuperSource memory recall
+against an ATEM switcher via animATEM's local control server, and shows
+feedback/variables for the current program/preview input and connection
+status.
 
 Built against `@companion-module/base` v2 (Companion 3.0+), matching the
 structure of the official
@@ -49,9 +50,13 @@ animATEM is running.
 ## Status
 
 Actions: Cut, Auto, Fade to Black, Set Program Input, Set Preview Input,
-Set Aux Source, Recall Memory (dropdown populated live from animATEM's
-saved memories). Feedbacks: ATEM connection up, Program input is X, Preview
-input is X. Variables: connection status, program/preview input names.
+Set Aux Source, Recall Memory, Animate to SuperSource Memory (both dropdowns
+populated live from animATEM's saved memories; Animate also takes a
+duration and eases into the layout instead of cutting to it — SuperSource
+memories only, since DVE animation goes through the switcher's own
+hardware fly-keyframes rather than this control server). Feedbacks: ATEM
+connection up, Program input is X, Preview input is X. Variables:
+connection status, program/preview input names.
 
 Not yet submitted to Companion's module registry — for local/dev use only
 for now.

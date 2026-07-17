@@ -12,6 +12,15 @@ import type {
   SuperSourceState,
   UpstreamKeyerDveState
 } from '../../shared/protocol'
+import { easeInOutQuad } from '../../shared/easing'
+import {
+  applyEasing,
+  DEFAULT_SUPER_SOURCE_BOX,
+  interpolateSuperSourceBox,
+  stepCount
+} from '../../shared/superSourceAnimation'
+
+const SUPER_SOURCE_ANIMATION_STEP_MS = 20
 
 /** Exported for direct unit testing — pure transformation, no dependency on a live Atem connection. */
 export function buildSnapshot(state: AtemState | undefined): AtemSnapshot | null {
@@ -93,6 +102,7 @@ class AtemConnection extends EventEmitter {
   private atem: Atem | null = null
   private status: ConnectionStatus = 'disconnected'
   private host: string | null = null
+  private superSourceAnimationTimer: NodeJS.Timeout | null = null
 
   connect(host: string): void {
     this.teardown()
@@ -167,6 +177,7 @@ class AtemConnection extends EventEmitter {
   /** Pushes a preview-composited SuperSource box arrangement to the real switcher ("Take"). */
   async pushSuperSourceLayout(layout: AtemBoxLayout, ssrcId = 0): Promise<void> {
     if (!this.atem) return
+    this.cancelSuperSourceAnimation()
     await Promise.all(
       layout.boxes.map((box) => {
         if (box.index === undefined) return Promise.resolve()
@@ -174,6 +185,73 @@ class AtemConnection extends EventEmitter {
         return this.atem!.setSuperSourceBoxSettings(props, index, ssrcId)
       })
     )
+  }
+
+  /**
+   * Same destination as pushSuperSourceLayout, but eases there over
+   * durationMs instead of cutting instantly. The ATEM protocol has no native
+   * SuperSource tweening (SuperSourceBoxParametersCommand always applies
+   * instantly, unlike an Upstream Keyer DVE's hardware fly-keyframes) - this
+   * streams interpolated box states at a fixed cadence instead. A box
+   * turning off stays enabled through the animation and only actually
+   * disables in the final, exact command, so it animates its geometry away
+   * cleanly rather than vanishing mid-move.
+   */
+  async animateSuperSourceLayout(
+    layout: AtemBoxLayout,
+    ssrcId = 0,
+    durationMs = 1000
+  ): Promise<void> {
+    if (!this.atem) return
+    this.cancelSuperSourceAnimation()
+
+    const liveBoxes = this.atem.state?.video.superSources[ssrcId]?.boxes
+    const targets = layout.boxes
+      .filter(
+        (box): box is { index: number } & AtemBoxLayout['boxes'][number] => box.index !== undefined
+      )
+      .map((box) => ({
+        index: box.index,
+        from: liveBoxes?.[box.index] ?? DEFAULT_SUPER_SOURCE_BOX,
+        to: box
+      }))
+    if (targets.length === 0) return
+
+    const totalSteps = stepCount(durationMs, SUPER_SOURCE_ANIMATION_STEP_MS)
+
+    await new Promise<void>((resolve) => {
+      let step = 0
+      const tick = (): void => {
+        step++
+        const t = applyEasing(step, totalSteps, easeInOutQuad)
+        const atFinalStep = step >= totalSteps
+        Promise.all(
+          targets.map(({ index, from, to }) =>
+            this.atem!.setSuperSourceBoxSettings(
+              atFinalStep ? to : interpolateSuperSourceBox(from, to, t),
+              index,
+              ssrcId
+            )
+          )
+        ).catch(() => {})
+
+        if (atFinalStep) {
+          this.superSourceAnimationTimer = null
+          resolve()
+        } else {
+          this.superSourceAnimationTimer = setTimeout(tick, SUPER_SOURCE_ANIMATION_STEP_MS)
+        }
+      }
+      tick()
+    })
+  }
+
+  /** Cancels an in-flight animateSuperSourceLayout, leaving boxes wherever they currently are. */
+  cancelSuperSourceAnimation(): void {
+    if (this.superSourceAnimationTimer) {
+      clearTimeout(this.superSourceAnimationTimer)
+      this.superSourceAnimationTimer = null
+    }
   }
 
   /** Pushes a preview-composited DVE arrangement to the real switcher ("Take"). */
@@ -192,6 +270,7 @@ class AtemConnection extends EventEmitter {
   }
 
   private teardown(): void {
+    this.cancelSuperSourceAnimation()
     if (this.atem) {
       this.atem.disconnect().catch(() => {})
       this.atem.removeAllListeners()

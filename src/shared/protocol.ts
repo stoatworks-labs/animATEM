@@ -121,6 +121,7 @@ export type ControlInboundMessage =
   | { type: 'setPreview'; input: number; me?: number }
   | { type: 'setAux'; source: number; bus?: number }
   | { type: 'recallMemory'; id: string }
+  | { type: 'animateSuperSource'; id: string; durationMs?: number }
 
 /** Normalized (0-1) rect within the multiview capture frame. */
 export interface BoxRect {

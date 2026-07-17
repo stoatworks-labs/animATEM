@@ -94,6 +94,11 @@ app.whenReady().then(() => {
     atemConnection.pushSuperSourceLayout(layout, ssrcId)
   )
   ipcMain.handle(
+    'atem:animate-supersource',
+    (_e, layout: AtemBoxLayout, ssrcId?: number, durationMs?: number) =>
+      atemConnection.animateSuperSourceLayout(layout, ssrcId, durationMs)
+  )
+  ipcMain.handle(
     'atem:push-dve',
     (_e, layout: AtemDveLayout, meIndex?: number, keyerIndex?: number) =>
       atemConnection.pushUpstreamKeyerDve(layout, meIndex, keyerIndex)

@@ -82,6 +82,9 @@ class ControlServer {
         case 'recallMemory':
           await this.recallMemory(message.id)
           break
+        case 'animateSuperSource':
+          await this.animateSuperSource(message.id, message.durationMs)
+          break
       }
     } catch (err) {
       // A bad/unsupported command from a control surface shouldn't crash the
@@ -105,6 +108,18 @@ class ControlServer {
     } else {
       await atemConnection.pushUpstreamKeyerDve(memory.layout, memory.meIndex, memory.keyerIndex)
     }
+  }
+
+  /** Same as recallMemory, but eases into the memory's layout instead of cutting to it - SuperSource memories only, since DVE animation uses the switcher's own hardware fly-keyframes rather than this client-side path. */
+  private async animateSuperSource(id: string, durationMs?: number): Promise<void> {
+    const memories = await listMemories()
+    const memory = memories.find((m) => m.id === id)
+    if (!memory || memory.kind !== 'supersource') return
+    await atemConnection.animateSuperSourceLayout(
+      memory.layout,
+      memory.superSourceIndex,
+      durationMs
+    )
   }
 }
 

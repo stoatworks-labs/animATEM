@@ -365,6 +365,7 @@ body {
 }
 
 .ssrc-toolbar select,
+.ssrc-toolbar input[type='number'],
 .ssrc-box-table select {
   background: #1a1c20;
   border: 1px solid #2a2c31;
@@ -372,6 +373,11 @@ body {
   color: #e8e8ea;
   padding: 4px 8px;
   font-size: 12px;
+}
+
+.ssrc-toolbar input[type='number'] {
+  width: 56px;
+  margin: 0 4px;
 }
 
 .ssrc-toolbar button {

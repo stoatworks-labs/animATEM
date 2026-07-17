@@ -8,6 +8,7 @@ export type ActionsSchema = {
   set_preview: { options: { input: number; me: number } }
   set_aux: { options: { source: number; bus: number } }
   recall_memory: { options: { memoryId: string } }
+  animate_supersource: { options: { memoryId: string; durationMs: number } }
 }
 
 export function UpdateActions(self: ModuleInstance): void {
@@ -89,6 +90,36 @@ export function UpdateActions(self: ModuleInstance): void {
       callback: async (event) => {
         if (!event.options.memoryId) return
         self.client?.send({ type: 'recallMemory', id: event.options.memoryId })
+      }
+    },
+    animate_supersource: {
+      name: 'Animate to SuperSource memory',
+      options: [
+        {
+          id: 'memoryId',
+          type: 'dropdown',
+          label: 'Memory',
+          default: self.memories.find((m) => m.kind === 'supersource')?.id ?? '',
+          choices: self.memories
+            .filter((m) => m.kind === 'supersource')
+            .map((m) => ({ id: m.id, label: m.name }))
+        },
+        {
+          id: 'durationMs',
+          type: 'number',
+          label: 'Duration (ms)',
+          default: 1000,
+          min: 50,
+          max: 30000
+        }
+      ],
+      callback: async (event) => {
+        if (!event.options.memoryId) return
+        self.client?.send({
+          type: 'animateSuperSource',
+          id: event.options.memoryId,
+          durationMs: event.options.durationMs
+        })
       }
     }
   })

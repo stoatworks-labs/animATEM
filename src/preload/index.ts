@@ -26,6 +26,11 @@ const api = {
       ipcRenderer.invoke('atem:aux', source, bus),
     pushSuperSourceLayout: (layout: AtemBoxLayout, ssrcId?: number): Promise<void> =>
       ipcRenderer.invoke('atem:push-supersource', layout, ssrcId),
+    animateSuperSourceLayout: (
+      layout: AtemBoxLayout,
+      ssrcId?: number,
+      durationMs?: number
+    ): Promise<void> => ipcRenderer.invoke('atem:animate-supersource', layout, ssrcId, durationMs),
     pushUpstreamKeyerDve: (
       layout: AtemDveLayout,
       meIndex?: number,

@@ -84,6 +84,8 @@ function SuperSourceEditor({ snapshot, calibration }: Props): React.JSX.Element 
   const superSources = snapshot?.superSources ?? []
   const [ssrcIndex, setSsrcIndex] = useState(0)
   const [boxes, setBoxes] = useState<SuperSourceBoxState[]>([0, 1, 2, 3].map(emptyBox))
+  const [animateSeconds, setAnimateSeconds] = useState(1)
+  const [animating, setAnimating] = useState(false)
   const seededRef = useRef(false)
 
   const programCanvasRef = useRef<HTMLCanvasElement>(null)
@@ -166,6 +168,15 @@ function SuperSourceEditor({ snapshot, calibration }: Props): React.JSX.Element 
     await window.api.atem.pushSuperSourceLayout({ boxes }, ssrcIndex)
   }
 
+  const animate = async (): Promise<void> => {
+    setAnimating(true)
+    try {
+      await window.api.atem.animateSuperSourceLayout({ boxes }, ssrcIndex, animateSeconds * 1000)
+    } finally {
+      setAnimating(false)
+    }
+  }
+
   const recallMemory = (memory: Memory): void => {
     if (memory.kind !== 'supersource') return
     setBoxes([0, 1, 2, 3].map((i) => ({ ...emptyBox(i), ...memory.layout.boxes[i] })))
@@ -238,6 +249,20 @@ function SuperSourceEditor({ snapshot, calibration }: Props): React.JSX.Element 
         </label>
         <button onClick={resetToLive} disabled={!liveSuperSource}>
           Reset to live
+        </button>
+        <label>
+          Animate over
+          <input
+            type="number"
+            min={0.1}
+            step={0.1}
+            value={animateSeconds}
+            onChange={(e) => setAnimateSeconds(Math.max(0.1, Number(e.target.value)))}
+          />
+          s
+        </label>
+        <button onClick={() => void animate()} disabled={animating}>
+          {animating ? 'Animating…' : 'Animate'}
         </button>
         <button className="take-button" onClick={() => void take()}>
           Take

@@ -18,11 +18,18 @@ preview SuperSource/DVE changes with real live pixels before they're pushed
 to air. Named "memories" — app-level presets, independent of the ATEM's own
 macro system — capture and recall these arrangements.
 
+SuperSource box moves can also be **animated** rather than cut instantly: the
+ATEM protocol itself has no native SuperSource tweening (unlike an upstream
+keyer's DVE, which the switcher already animates in hardware via fly-
+keyframes), so animATEM eases into the target layout client-side — a fixed-
+cadence stream of interpolated positions, not a single instant command. Pick
+a duration and hit "Animate" instead of "Take" in the SuperSource editor.
+
 A companion [Bitfocus Companion](https://bitfocus.io/companion) module lives
 in [`companion-module/`](companion-module/README.md) — it lets Companion
-buttons trigger Cut/Auto/FTB, source selection, and memory recall against
-animATEM's local control server, with feedback/variables for the current
-program/preview input.
+buttons trigger Cut/Auto/FTB, source selection, memory recall, and animated
+SuperSource memory recall against animATEM's local control server, with
+feedback/variables for the current program/preview input.
 
 ## Concept
 
