@@ -1,5 +1,7 @@
 # animATEM
 
+[![ci](https://github.com/allansargeant/animATEM/actions/workflows/ci.yml/badge.svg)](https://github.com/allansargeant/animATEM/actions/workflows/ci.yml)
+
 > **AI-assisted project.** This codebase was created with [Claude Code](https://claude.com/claude-code)
 > (Anthropic), directed and reviewed by a human author. It has not yet been
 > validated against real ATEM hardware.
@@ -90,6 +92,19 @@ unzip -q <path-to-the-zip-above> -d node_modules/electron/dist
 printf "Electron.app/Contents/MacOS/Electron" > node_modules/electron/path.txt
 ```
 
+### Testing
+
+```sh
+npm run test
+```
+
+Unit tests cover the pure box-geometry/drag/coordinate-conversion math and
+the file-backed calibration/memory stores (`vitest`, no hardware needed).
+`companion-module/` has its own `npm run test` covering the control-server
+WebSocket client. CI (`.github/workflows/ci.yml`) runs typecheck/lint/test
+for both packages on every push and PR; `.github/workflows/release.yml`
+builds installers for Windows/macOS/Linux (x64 + arm64) on a `v*` tag.
+
 ## Status
 
 Phase 1 feature set is built: ATEM connection (standard switching — cut/
@@ -115,6 +130,12 @@ module's own compiled client code) connects, receives the initial status/
 snapshot/memories state, and round-trips commands against a running
 animATEM instance without errors. Like everything else, actual command
 behavior (cut/auto/recall) hasn't been checked against a real switcher yet.
+
+Production packaging is verified too: `npm run build:mac` produces working
+signed-nothing (no Apple dev cert yet) x64 + arm64 `.dmg`/`.zip` installers,
+and the packaged arm64 `.app` boots cleanly on its own — full Electron
+process tree comes up, the control server binds correctly — separate from
+every other check in this project, which has run through `npm run dev`.
 
 ## ⚠️ Security note
 
