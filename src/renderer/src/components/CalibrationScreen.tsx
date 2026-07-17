@@ -2,18 +2,36 @@ import { useEffect, useRef, useState } from 'react'
 import { captureManager } from '../capture/captureManager'
 import { useCaptureState } from '../capture/useCaptureState'
 import { normalizedToPixel, rectFromCorners, resolutionKey } from '../compositor/boxGeometry'
-import type { AtemSnapshot, CalibratedBox, MultiViewerWindowState } from '../../../shared/protocol'
+import {
+  applyDrag,
+  hitTestBoxes,
+  type Corner,
+  type DragOrigin
+} from '../compositor/dragInteraction'
+import type {
+  AtemSnapshot,
+  BoxRect,
+  CalibratedBox,
+  MultiViewerWindowState
+} from '../../../shared/protocol'
 
 interface Props {
   snapshot: AtemSnapshot | null
   onSaved?: (resolutionKey: string, boxes: CalibratedBox[]) => void
 }
 
-interface DragState {
+interface DrawState {
   startX: number
   startY: number
   x: number
   y: number
+}
+
+interface AdjustState {
+  boxIndex: number
+  mode: 'move' | 'resize'
+  corner?: Corner
+  origin: DragOrigin
 }
 
 const MULTI_VIEWER_INDEX = 0
@@ -33,13 +51,33 @@ function sourceNameForWindow(snapshot: AtemSnapshot | null, windowIndex: number)
   return win ? sourceNameForInput(snapshot, win.source) : null
 }
 
+/** An evenly-spaced starting grid for N boxes — a guess to nudge into place via drag, not the real layout geometry (which isn't documented/queryable). */
+function gridRects(count: number): BoxRect[] {
+  if (count === 0) return []
+  const columns = Math.ceil(Math.sqrt(count))
+  const rows = Math.ceil(count / columns)
+  const rects: BoxRect[] = []
+  for (let i = 0; i < count; i++) {
+    const col = i % columns
+    const row = Math.floor(i / columns)
+    rects.push({
+      x: col / columns,
+      y: row / rows,
+      width: 1 / columns,
+      height: 1 / rows
+    })
+  }
+  return rects
+}
+
 function CalibrationScreen({ snapshot, onSaved }: Props): React.JSX.Element {
   const { frameSize } = useCaptureState()
   const [boxes, setBoxes] = useState<CalibratedBox[]>([])
   const [saved, setSaved] = useState(false)
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const dragRef = useRef<DragState | null>(null)
+  const drawRef = useRef<DrawState | null>(null)
+  const adjustRef = useRef<AdjustState | null>(null)
   const boxesRef = useRef<CalibratedBox[]>([])
   const snapshotRef = useRef(snapshot)
 
@@ -73,15 +111,24 @@ function CalibrationScreen({ snapshot, onSaved }: Props): React.JSX.Element {
       ctx.fillStyle = ctx.strokeStyle
       ctx.strokeRect(px.x, px.y, px.width, px.height)
       ctx.fillText(label ?? 'unassigned', px.x + 4, px.y + 18)
+      const handleSize = 8
+      for (const [hx, hy] of [
+        [px.x, px.y],
+        [px.x + px.width, px.y],
+        [px.x, px.y + px.height],
+        [px.x + px.width, px.y + px.height]
+      ]) {
+        ctx.fillRect(hx - handleSize / 2, hy - handleSize / 2, handleSize, handleSize)
+      }
     }
-    const drag = dragRef.current
-    if (drag) {
+    const draw = drawRef.current
+    if (draw) {
       ctx.strokeStyle = '#eab308'
       ctx.strokeRect(
-        Math.min(drag.startX, drag.x),
-        Math.min(drag.startY, drag.y),
-        Math.abs(drag.x - drag.startX),
-        Math.abs(drag.y - drag.startY)
+        Math.min(draw.startX, draw.x),
+        Math.min(draw.startY, draw.y),
+        Math.abs(draw.x - draw.startX),
+        Math.abs(draw.y - draw.startY)
       )
     }
   }
@@ -114,31 +161,69 @@ function CalibrationScreen({ snapshot, onSaved }: Props): React.JSX.Element {
     }
   }
 
-  const onMouseDown = (e: React.MouseEvent<HTMLCanvasElement>): void => {
+  const normalizedPoint = (
+    e: React.MouseEvent<HTMLCanvasElement>
+  ): { x: number; y: number } | null => {
+    const canvas = canvasRef.current
     const point = canvasPoint(e)
-    if (!point) return
-    dragRef.current = { startX: point.x, startY: point.y, x: point.x, y: point.y }
+    if (!canvas || !point) return null
+    return { x: point.x / canvas.width, y: point.y / canvas.height }
+  }
+
+  const onMouseDown = (e: React.MouseEvent<HTMLCanvasElement>): void => {
+    const normalized = normalizedPoint(e)
+    const point = canvasPoint(e)
+    if (!normalized || !point) return
+
+    const targets = boxesRef.current.map((b, i) => ({ id: i, rect: b.rect }))
+    const hit = hitTestBoxes(targets, normalized)
+    if (hit) {
+      adjustRef.current = {
+        boxIndex: hit.id,
+        mode: hit.mode,
+        corner: hit.corner,
+        origin: { rect: boxesRef.current[hit.id].rect, pointer: normalized }
+      }
+      return
+    }
+
+    drawRef.current = { startX: point.x, startY: point.y, x: point.x, y: point.y }
   }
 
   const onMouseMove = (e: React.MouseEvent<HTMLCanvasElement>): void => {
-    if (!dragRef.current) return
+    if (adjustRef.current) {
+      const normalized = normalizedPoint(e)
+      if (!normalized) return
+      const adjust = adjustRef.current
+      const rect = applyDrag(adjust.origin, adjust.mode, adjust.corner, normalized, false)
+      setBoxes((prev) => prev.map((b, i) => (i === adjust.boxIndex ? { ...b, rect } : b)))
+      return
+    }
+
+    if (!drawRef.current) return
     const point = canvasPoint(e)
     if (!point) return
-    dragRef.current = { ...dragRef.current, x: point.x, y: point.y }
+    drawRef.current = { ...drawRef.current, x: point.x, y: point.y }
   }
 
   const onMouseUp = (): void => {
-    const drag = dragRef.current
+    if (adjustRef.current) {
+      adjustRef.current = null
+      setSaved(false)
+      return
+    }
+
+    const draw = drawRef.current
     const canvas = canvasRef.current
-    dragRef.current = null
-    if (!drag || !canvas) return
-    if (Math.abs(drag.x - drag.startX) < 8 || Math.abs(drag.y - drag.startY) < 8) return
+    drawRef.current = null
+    if (!draw || !canvas) return
+    if (Math.abs(draw.x - draw.startX) < 8 || Math.abs(draw.y - draw.startY) < 8) return
 
     const rect = rectFromCorners(
-      drag.startX,
-      drag.startY,
-      drag.x,
-      drag.y,
+      draw.startX,
+      draw.startY,
+      draw.x,
+      draw.y,
       canvas.width,
       canvas.height
     )
@@ -150,6 +235,14 @@ function CalibrationScreen({ snapshot, onSaved }: Props): React.JSX.Element {
     const usedIndexes = new Set(boxesRef.current.map((b) => b.windowIndex))
     const suggestion = liveWindows(snapshotRef.current).find((w) => !usedIndexes.has(w.windowIndex))
     setBoxes((prev) => [...prev, { windowIndex: suggestion?.windowIndex ?? UNASSIGNED, rect }])
+    setSaved(false)
+  }
+
+  const autoCreateBoxes = (): void => {
+    const windows = liveWindows(snapshot)
+    if (windows.length === 0) return
+    const rects = gridRects(windows.length)
+    setBoxes(windows.map((w, i) => ({ windowIndex: w.windowIndex, rect: rects[i] })))
     setSaved(false)
   }
 
@@ -181,7 +274,7 @@ function CalibrationScreen({ snapshot, onSaved }: Props): React.JSX.Element {
     <div className="calibration-screen">
       <p className="calibration-hint">
         {
-          'Draw a rectangle around each multiview box, then pick which live source it shows from the dropdown — match by what you can actually see in the box, not a guessed number. Connect to the ATEM first so the dropdown has real sources to pick from.'
+          'Draw a rectangle around each multiview box (or use "Auto-create boxes" below for a starting grid), drag a box or its corners to nudge it into place, then pick which live source it shows from the dropdown — match by what you can actually see in the box, not a guessed number. Connect to the ATEM first so there\'s something to match against.'
         }
       </p>
       <canvas
@@ -192,6 +285,11 @@ function CalibrationScreen({ snapshot, onSaved }: Props): React.JSX.Element {
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseUp}
       />
+      <div className="calibration-actions">
+        <button onClick={autoCreateBoxes} disabled={windows.length === 0}>
+          {`Auto-create ${windows.length || ''} box${windows.length === 1 ? '' : 'es'} from live count`}
+        </button>
+      </div>
       <table className="calibration-table">
         <thead>
           <tr>
@@ -225,7 +323,7 @@ function CalibrationScreen({ snapshot, onSaved }: Props): React.JSX.Element {
           {boxes.length === 0 && (
             <tr>
               <td colSpan={3} className="calibration-empty">
-                Draw a box on the picture above to get started.
+                Draw a box on the picture above, or use auto-create, to get started.
               </td>
             </tr>
           )}

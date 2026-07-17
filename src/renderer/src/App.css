@@ -267,6 +267,7 @@ body {
 
 .calibration-canvas {
   cursor: crosshair;
+  touch-action: none;
 }
 
 .calibration-table {
