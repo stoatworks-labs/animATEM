@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events'
 import { Atem, Enums } from 'atem-connection'
+import type { AtemState } from 'atem-connection'
 import type {
   AtemBoxLayout,
   AtemDveLayout,
@@ -12,8 +13,8 @@ import type {
   UpstreamKeyerDveState
 } from '../../shared/protocol'
 
-function buildSnapshot(atem: Atem): AtemSnapshot | null {
-  const state = atem.state
+/** Exported for direct unit testing — pure transformation, no dependency on a live Atem connection. */
+export function buildSnapshot(state: AtemState | undefined): AtemSnapshot | null {
   if (!state) return null
 
   const inputs: AtemInput[] = Object.values(state.inputs)
@@ -136,7 +137,7 @@ class AtemConnection extends EventEmitter {
   }
 
   getSnapshot(): AtemSnapshot | null {
-    return this.atem ? buildSnapshot(this.atem) : null
+    return this.atem ? buildSnapshot(this.atem.state) : null
   }
 
   async cut(me = 0): Promise<void> {
