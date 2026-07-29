@@ -6,6 +6,26 @@ import { getCalibrationProfile, saveCalibrationProfile } from './services/calibr
 import { deleteMemory, listMemories, saveMemory } from './services/memoryStore'
 import { controlServer } from './services/controlServer'
 import type { AtemBoxLayout, AtemDveLayout, CalibrationProfile, Memory } from '../shared/protocol'
+import { collectDiagnostics, init as initDiag, say } from './diag/index.js'
+import { installElectronDiagnostics } from './diag/electron.js'
+
+// Before anything that can fail, so a failure during startup is logged and
+// captured like any other. An Electron app is several processes, so the
+// renderer and GPU hooks go in too - neither raises anything the main
+// process's uncaughtException handler can see.
+initDiag({
+  app: 'animatem',
+  envPrefix: 'ANIMATEM',
+  version: '0.1.0',
+  cwd: app_diag_cwd()
+})
+installElectronDiagnostics()
+
+if (process.argv.includes('--collect-diagnostics')) {
+  // stdout, so it can be used in a script; logging went to stderr.
+  say.info(collectDiagnostics())
+  app.exit(0)
+}
 
 function createWindow(): BrowserWindow {
   const mainWindow = new BrowserWindow({
@@ -28,7 +48,7 @@ function createWindow(): BrowserWindow {
 
   if (is.dev) {
     mainWindow.webContents.on('console-message', (event) => {
-      console.log(`[renderer:${event.level}] ${event.message}`)
+      say.info(`[renderer:${event.level}] ${event.message}`)
     })
   }
 
@@ -142,3 +162,10 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
+
+
+/** Repo root when running from source; irrelevant once packaged, where
+ *  there is no .git and the git revision reads as 'unknown'. */
+function app_diag_cwd(): string {
+  return join(__dirname, '../../..')
+}
