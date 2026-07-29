@@ -3,6 +3,7 @@ import { CONTROL_SERVER_PORT } from '../../shared/protocol'
 import type { ControlInboundMessage, ControlOutboundMessage } from '../../shared/protocol'
 import { atemConnection } from './atemConnection'
 import { listMemories } from './memoryStore'
+import { say } from '../diag/index.js'
 
 /**
  * Local control server for third-party control surfaces (the companion-module/
@@ -89,7 +90,7 @@ class ControlServer {
     } catch (err) {
       // A bad/unsupported command from a control surface shouldn't crash the
       // server or drop the connection — log and keep going.
-      console.error('[controlServer] command failed', err)
+      say.error('[controlServer] command failed', err)
     }
   }
 
