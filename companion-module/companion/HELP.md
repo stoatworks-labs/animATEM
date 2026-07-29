@@ -1,7 +1,7 @@
 ## animATEM
 
 Connects to animATEM's local control server (a companion feature of the
-[animATEM](https://github.com/allansargeant/animATEM) desktop app, running
+[animATEM](https://github.com/stoatworks-labs/animATEM) desktop app, running
 on the same machine or LAN) to trigger standard switching, source
 selection, and memory recall from Companion buttons.
 

@@ -7,8 +7,8 @@
   "description": "Control animATEM — cut/auto/FTB, source selection, and memory recall for a Blackmagic ATEM switcher via animATEM's local control server.",
   "version": "0.1.0",
   "license": "MIT",
-  "repository": "git+https://github.com/allansargeant/animATEM.git",
-  "bugs": "https://github.com/allansargeant/animATEM/issues",
+  "repository": "git+https://github.com/stoatworks-labs/animATEM.git",
+  "bugs": "https://github.com/stoatworks-labs/animATEM/issues",
   "maintainers": [
     {
       "name": "Allan Sargeant",
