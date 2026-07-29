@@ -81,3 +81,11 @@ checked against a real switcher's output, treat agreement as unproven.
 - Private repo, but it still ships a user-facing AI-assisted disclaimer.
 - Multi-platform release CI; cross-compile macOS x86_64 on `macos-14` — never `macos-13`.
 - "Commit" means commit **and** push.
+
+## Diagnostics
+
+Log via `say`/`log` from `src/main/diag/`, never `console`. `installElectronDiagnostics()`
+hooks `render-process-gone` and `child-process-gone` — a dead renderer raises nothing the
+main process's `uncaughtException` handler can see. `diag:collect` and `diag:openLogFolder`
+are registered over IPC but **no UI calls them yet**; wiring a button is outstanding.
+See [docs/diagnostics.md](docs/diagnostics.md).
