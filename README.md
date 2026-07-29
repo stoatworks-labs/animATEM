@@ -73,6 +73,14 @@ ATEM Ethernet protocol control via
 `navigator.mediaDevices.getUserMedia` (full Chromium context, no native
 addon needed).
 
+## Documentation
+
+| Doc | Contents |
+|---|---|
+| [docs/USER-GUIDE.md](docs/USER-GUIDE.md) | Operating it: multiview setup, calibration, Preview/Take, animation, memories, troubleshooting |
+| [docs/API.md](docs/API.md) | The control-server protocol, state model, coordinate conversions, memories file format, IPC channels |
+| [docs/DEVELOPING.md](docs/DEVELOPING.md) | Build, tests, and the coordinate work that is the hard part |
+
 ## Development
 
 ```sh
