@@ -1,6 +1,6 @@
 # animATEM
 
-[![ci](https://github.com/allansargeant/animATEM/actions/workflows/ci.yml/badge.svg)](https://github.com/allansargeant/animATEM/actions/workflows/ci.yml)
+[![ci](https://github.com/stoatworks-labs/animATEM/actions/workflows/ci.yml/badge.svg)](https://github.com/stoatworks-labs/animATEM/actions/workflows/ci.yml)
 
 > **AI-assisted project.** This codebase was created with [Claude Code](https://claude.com/claude-code)
 > (Anthropic), directed and reviewed by a human author. It has not yet been
