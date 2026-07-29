@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { ConnectionStatus } from '../../../shared/protocol'
+import DiagnosticsPanel from './DiagnosticsPanel'
 
 interface Props {
   status: ConnectionStatus
@@ -32,6 +33,7 @@ function ConnectionSettings({ status, lastError }: Props): React.JSX.Element {
         <button onClick={connect}>Connect</button>
       )}
       {lastError && status === 'error' && <span className="connection-error">{lastError}</span>}
+      <DiagnosticsPanel />
     </div>
   )
 }
