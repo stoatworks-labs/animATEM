@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@companion-module/tools": "^3.0.1",
-    "@types/node": "^22.19.1",
+    "@types/node": "^26.1.2",
     "@types/ws": "^8.18.1",
     "eslint": "^9.39.1",
     "prettier": "^3.7.4",
