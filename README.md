@@ -31,6 +31,62 @@ buttons trigger Cut/Auto/FTB, source selection, memory recall, and animated
 SuperSource memory recall against animATEM's local control server, with
 feedback/variables for the current program/preview input.
 
+<!-- downloads:start -->
+
+## Download
+
+**[v0.1.1](https://github.com/stoatworks-labs/animATEM/releases/tag/v0.1.1)** — prebuilt for macOS, Windows and Linux. Pick your platform:
+
+<details>
+<summary><b>macOS</b> — Apple Silicon, Intel</summary>
+
+| Build | Download | Size |
+| --- | --- | --- |
+| Apple Silicon · .dmg disk image | [`animATEM-0.1.1-arm64.dmg`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animATEM-0.1.1-arm64.dmg) | 117 MB |
+| Intel · .dmg disk image | [`animATEM-0.1.1.dmg`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animATEM-0.1.1.dmg) | 124 MB |
+| Apple Silicon · .pkg installer | [`animatem-0.1.1-macos-arm64.pkg`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1-macos-arm64.pkg) | 117 MB |
+| Intel · .pkg installer | [`animatem-0.1.1-macos-x64.pkg`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1-macos-x64.pkg) | 124 MB |
+| Apple Silicon · .zip archive | [`animATEM-0.1.1-arm64-mac.zip`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animATEM-0.1.1-arm64-mac.zip) | 117 MB |
+| Intel · .zip archive | [`animATEM-0.1.1-mac.zip`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animATEM-0.1.1-mac.zip) | 125 MB |
+
+</details>
+
+<details>
+<summary><b>Windows</b> — x64 & ARM64, x64, ARM64</summary>
+
+| Build | Download | Size |
+| --- | --- | --- |
+| x64 & ARM64 · .exe installer | [`animatem-0.1.1-setup.exe`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1-setup.exe) | 199 MB |
+| x64 · .exe installer | [`animatem-0.1.1-x64-setup.exe`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1-x64-setup.exe) | 103 MB |
+| ARM64 · .exe installer | [`animatem-0.1.1-arm64-setup.exe`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1-arm64-setup.exe) | 97 MB |
+| x64 & ARM64 · portable .exe | [`animatem-0.1.1-portable.exe`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1-portable.exe) | 199 MB |
+| x64 · portable .exe | [`animatem-0.1.1-x64-portable.exe`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1-x64-portable.exe) | 102 MB |
+| ARM64 · portable .exe | [`animatem-0.1.1-arm64-portable.exe`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1-arm64-portable.exe) | 97 MB |
+| x64 · .zip archive | [`animATEM-0.1.1-win.zip`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animATEM-0.1.1-win.zip) | 144 MB |
+| ARM64 · .zip archive | [`animATEM-0.1.1-arm64-win.zip`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animATEM-0.1.1-arm64-win.zip) | 143 MB |
+
+</details>
+
+<details>
+<summary><b>Linux</b> — x64, ARM64</summary>
+
+| Build | Download | Size |
+| --- | --- | --- |
+| x64 · .deb package (Debian/Ubuntu) | [`animatem_0.1.1_amd64.deb`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem_0.1.1_amd64.deb) | 96 MB |
+| ARM64 · .deb package (Debian/Ubuntu) | [`animatem_0.1.1_arm64.deb`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem_0.1.1_arm64.deb) | 91 MB |
+| x64 · .rpm package (Fedora/RHEL) | [`animatem-0.1.1.x86_64.rpm`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1.x86_64.rpm) | 85 MB |
+| ARM64 · .rpm package (Fedora/RHEL) | [`animatem-0.1.1.aarch64.rpm`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1.aarch64.rpm) | 80 MB |
+| x64 · AppImage | [`animATEM-0.1.1.AppImage`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animATEM-0.1.1.AppImage) | 123 MB |
+| ARM64 · AppImage | [`animATEM-0.1.1-arm64.AppImage`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animATEM-0.1.1-arm64.AppImage) | 124 MB |
+
+</details>
+
+All builds, checksums and release notes: [github.com/stoatworks-labs/animATEM/releases](https://github.com/stoatworks-labs/animATEM/releases).
+
+These builds are unsigned, so macOS and Windows each warn once on first launch — see [Unsigned builds — Gatekeeper, SmartScreen & Defender Firewall](#unsigned-builds--gatekeeper-smartscreen--defender-firewall) for the one-time fix.
+
+<!-- downloads:end -->
+
 ## Concept
 
 ![Pipeline concept: ATEM multiview over USB is captured, cropped per box, and recomposited into an editable preview before being pushed back to the switcher over Ethernet](docs/concept-diagram.svg)
@@ -165,65 +221,25 @@ binding to `0.0.0.0` or another network-reachable address, add
 authentication first — as shipped, it is not safe to expose beyond
 localhost.
 
-## Unsigned builds — macOS Gatekeeper & Windows SmartScreen
+## Unsigned builds — Gatekeeper, SmartScreen & Defender Firewall
 
-The release builds are **not code-signed or notarized** — that needs paid Apple
-/ Windows developer certificates this project doesn't carry. The app is safe to
-run; the OS just can't verify a publisher, so it warns you the first time.
-Here's how to get past that, and how to sign it yourself if you'd rather.
+The release binaries are **not code-signed or notarized** — that needs paid Apple
+and Microsoft developer certificates this project doesn't carry. The downloads are
+fine; the OS just can't identify the publisher, so it warns you the first time.
 
-### macOS
+- **macOS** — *"cannot be opened because the developer cannot be verified"*.
+  Right-click the app → **Open** → **Open**, or clear the flag:
+  `xattr -dr com.apple.quarantine "/Applications/animATEM.app"`
+- **Windows** — SmartScreen shows *"Windows protected your PC"* →
+  **More info** → **Run anyway**.
+- **Windows Defender Firewall** — first launch pops *"Allow animATEM to communicate on
+  these networks"*. Tick **Private** (and **Domain** on a managed network) — animATEM
+  needs it to reach the ATEM switcher and expose its Companion control port. Deny it and
+  the switcher will show as offline and Companion won't connect.
+- **Linux** — no signing gate.
 
-Delivered as a `.dmg`/`.zip`. On first launch macOS says the app **"is damaged
-and can't be opened"** or **"cannot be opened because the developer cannot be
-verified"** — that's Gatekeeper reacting to the missing signature, not an actual
-problem.
-
-Easiest fix: **right-click (Control-click) the app in Applications → Open →
-Open**. You only do this once. If it still says *"damaged"* (common when the
-`.dmg` came through a browser), clear the quarantine flag in Terminal:
-
-```sh
-xattr -dr com.apple.quarantine "/Applications/animATEM.app"
-```
-
-### Windows
-
-The installer is an unsigned `.exe`, so SmartScreen shows **"Windows protected
-your PC"** → click **More info → Run anyway**. (Right-click → **Properties** →
-**Unblock** also works.)
-
-### Linux
-
-`.AppImage`: `chmod +x` it and run. `.deb`: `sudo apt install ./<file>.deb`. No
-signing gate.
-
-### Signing it yourself (optional)
-
-macOS ad-hoc (local only, not notarized):
-
-```sh
-codesign --force --deep --sign - "/Applications/animATEM.app"
-```
-
-To ship without warnings you need an **Apple Developer Program** membership
-($99/yr) + a *Developer ID Application* certificate, then sign with the hardened
-runtime and notarize:
-
-```sh
-codesign --force --deep --options runtime --timestamp \
-  --sign "Developer ID Application: Your Name (TEAMID)" "animATEM.app"
-ditto -c -k --keepParent "animATEM.app" "animATEM.zip"
-xcrun notarytool submit "animATEM.zip" --apple-id you@example.com \
-  --team-id TEAMID --password APP_SPECIFIC_PASSWORD --wait
-xcrun stapler staple "animATEM.app"
-```
-
-electron-builder does all of this for you if you set `CSC_LINK`,
-`CSC_KEY_PASSWORD`, `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD` and
-`APPLE_TEAM_ID`. On Windows, clearing SmartScreen needs an Authenticode
-code-signing certificate (`signtool sign`, or `CSC_LINK`/`CSC_KEY_PASSWORD` for
-electron-builder).
+Per-artifact steps, self-signing, checksum verification and the Defender Firewall reset
+procedure: **[docs/UNSIGNED.md](docs/UNSIGNED.md)**.
 
 ## Roadmap / TODO
 
