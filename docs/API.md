@@ -19,7 +19,7 @@
 ## 1. Control server — WebSocket `127.0.0.1:51234`
 
 The surface third-party control surfaces use; the
-[Companion module](../companion-module/README.md) in this repo is the reference client.
+[Companion module](https://github.com/stoatworks-labs/companion-module-animatem) is the reference client.
 
 > **⚠ No authentication.** Anything that can reach that port on the local machine can cut, auto,
 > FTB, change sources or recall a memory — i.e. put something on air. That is acceptable *only*
@@ -86,7 +86,9 @@ preview-only variant of `recallMemory` on the wire.
 
 ### ⚠ The protocol is duplicated by hand
 
-`companion-module/src/protocol.ts` **mirrors** `src/shared/protocol.ts`. The Companion module is
+companion-module-animatem's `src/protocol.ts` **mirrors** `src/shared/protocol.ts`. It is a
+separate repo, so nothing enforces that by import — the two are kept in sync BY HAND, and a
+change here breaks a Stream Deck button silently. The Companion module is
 a separate npm package and cannot import from the app, so the two are kept in sync manually.
 
 They are also **not identical**: the module's `Memory` types deliberately **omit the `layout`
@@ -236,5 +238,5 @@ own calibration.
 
 - [USER-GUIDE.md](USER-GUIDE.md) — operating it
 - [DEVELOPING.md](DEVELOPING.md) — build, tests, the coordinate work
-- [`companion-module/README.md`](../companion-module/README.md) — the Companion module
+- [companion-module-animatem](https://github.com/stoatworks-labs/companion-module-animatem) — the Companion module
 - [README](../README.md) — concept, status, security note

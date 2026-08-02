@@ -12,7 +12,8 @@ Electron ATEM-switcher control app with UVC multiview compositing. TypeScript, e
 
 ## Layout
 - Split main/preload (`tsconfig.node.json`) vs renderer (`tsconfig.web.json`) — typecheck covers both.
-- `companion-module/` — Bitfocus Companion module for this app.
+- The Bitfocus Companion module lives in its own repo, [companion-module-animatem](https://github.com/stoatworks-labs/companion-module-animatem).
+  `src/shared/protocol.ts` is mirrored there by hand — change one, change both.
 
 ## Notes
 - `postinstall` runs `electron-builder install-app-deps` (native deps).
