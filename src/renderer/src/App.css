@@ -602,3 +602,19 @@ body {
   color: #9a9ca3;
   overflow-wrap: anywhere;
 }
+
+/* Far right of the header, past the connection controls. Quiet on purpose: it
+   is the one button up there that does not touch the switcher. */
+.app-header .about-btn {
+  margin-left: auto;
+  padding: 4px 11px;
+  border: 1px solid #24262b;
+  border-radius: 999px;
+  background: none;
+  color: inherit;
+  opacity: 0.7;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.app-header .about-btn:hover { opacity: 1; }
