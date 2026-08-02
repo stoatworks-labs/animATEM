@@ -72,6 +72,11 @@ function App(): React.JSX.Element {
         </nav>
         <CaptureDevicePicker />
         <ConnectionSettings status={status} lastError={lastError} />
+        {/* Opens the shared About dialog — see public/about.js, which delegates
+            this attribute from the document, so nothing needs importing here. */}
+        <button type="button" className="about-btn" data-stoatworks-about>
+          About
+        </button>
       </header>
       <div className="app-body">
         {view === 'touch' && <TouchScreen snapshot={snapshot} calibration={calibration} />}
