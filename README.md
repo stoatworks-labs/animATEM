@@ -42,12 +42,12 @@ feedback/variables for the current program/preview input.
 
 | Build | Download | Size |
 | --- | --- | --- |
-| Apple Silicon · .dmg disk image | [`animATEM-0.1.1-arm64.dmg`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animATEM-0.1.1-arm64.dmg) | 117 MB |
-| Intel · .dmg disk image | [`animATEM-0.1.1.dmg`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animATEM-0.1.1.dmg) | 124 MB |
-| Apple Silicon · .pkg installer | [`animatem-0.1.1-macos-arm64.pkg`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1-macos-arm64.pkg) | 117 MB |
-| Intel · .pkg installer | [`animatem-0.1.1-macos-x64.pkg`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1-macos-x64.pkg) | 124 MB |
-| Apple Silicon · .zip archive | [`animATEM-0.1.1-arm64-mac.zip`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animATEM-0.1.1-arm64-mac.zip) | 117 MB |
-| Intel · .zip archive | [`animATEM-0.1.1-mac.zip`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animATEM-0.1.1-mac.zip) | 125 MB |
+| Apple Silicon · .dmg disk image | [`animATEM-0.1.1-arm64.dmg`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animATEM-0.1.2-arm64.dmg) | 112 MB |
+| Intel · .dmg disk image | [`animATEM-0.1.1.dmg`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animATEM-0.1.2.dmg) | 118 MB |
+| Apple Silicon · .pkg installer | [`animatem-0.1.1-macos-arm64.pkg`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animatem-0.1.2-macos-arm64.pkg) | 112 MB |
+| Intel · .pkg installer | [`animatem-0.1.1-macos-x64.pkg`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animatem-0.1.2-macos-x64.pkg) | 119 MB |
+| Apple Silicon · .zip archive | [`animATEM-0.1.1-arm64-mac.zip`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animATEM-0.1.2-arm64-mac.zip) | 108 MB |
+| Intel · .zip archive | [`animATEM-0.1.1-mac.zip`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animATEM-0.1.2-mac.zip) | 115 MB |
 
 </details>
 
@@ -56,14 +56,14 @@ feedback/variables for the current program/preview input.
 
 | Build | Download | Size |
 | --- | --- | --- |
-| x64 & ARM64 · .exe installer | [`animatem-0.1.1-setup.exe`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1-setup.exe) | 199 MB |
-| x64 · .exe installer | [`animatem-0.1.1-x64-setup.exe`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1-x64-setup.exe) | 103 MB |
-| ARM64 · .exe installer | [`animatem-0.1.1-arm64-setup.exe`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1-arm64-setup.exe) | 97 MB |
-| x64 & ARM64 · portable .exe | [`animatem-0.1.1-portable.exe`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1-portable.exe) | 199 MB |
-| x64 · portable .exe | [`animatem-0.1.1-x64-portable.exe`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1-x64-portable.exe) | 102 MB |
-| ARM64 · portable .exe | [`animatem-0.1.1-arm64-portable.exe`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1-arm64-portable.exe) | 97 MB |
-| x64 · .zip archive | [`animATEM-0.1.1-win.zip`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animATEM-0.1.1-win.zip) | 144 MB |
-| ARM64 · .zip archive | [`animATEM-0.1.1-arm64-win.zip`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animATEM-0.1.1-arm64-win.zip) | 143 MB |
+| x64 & ARM64 · .exe installer | [`animatem-0.1.1-setup.exe`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animatem-0.1.2-setup.exe) | 207 MB |
+| x64 · .exe installer | [`animatem-0.1.1-x64-setup.exe`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animatem-0.1.2-x64-setup.exe) | 106 MB |
+| ARM64 · .exe installer | [`animatem-0.1.1-arm64-setup.exe`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animatem-0.1.2-arm64-setup.exe) | 102 MB |
+| x64 & ARM64 · portable .exe | [`animatem-0.1.1-portable.exe`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animatem-0.1.2-portable.exe) | 207 MB |
+| x64 · portable .exe | [`animatem-0.1.1-x64-portable.exe`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animatem-0.1.2-x64-portable.exe) | 106 MB |
+| ARM64 · portable .exe | [`animatem-0.1.1-arm64-portable.exe`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animatem-0.1.2-arm64-portable.exe) | 102 MB |
+| x64 · .zip archive | [`animATEM-0.1.1-win.zip`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animATEM-0.1.2-win.zip) | 138 MB |
+| ARM64 · .zip archive | [`animATEM-0.1.1-arm64-win.zip`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animATEM-0.1.2-arm64-win.zip) | 137 MB |
 
 </details>
 
@@ -72,12 +72,12 @@ feedback/variables for the current program/preview input.
 
 | Build | Download | Size |
 | --- | --- | --- |
-| x64 · .deb package (Debian/Ubuntu) | [`animatem_0.1.1_amd64.deb`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem_0.1.1_amd64.deb) | 96 MB |
-| ARM64 · .deb package (Debian/Ubuntu) | [`animatem_0.1.1_arm64.deb`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem_0.1.1_arm64.deb) | 91 MB |
-| x64 · .rpm package (Fedora/RHEL) | [`animatem-0.1.1.x86_64.rpm`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1.x86_64.rpm) | 85 MB |
-| ARM64 · .rpm package (Fedora/RHEL) | [`animatem-0.1.1.aarch64.rpm`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animatem-0.1.1.aarch64.rpm) | 80 MB |
-| x64 · AppImage | [`animATEM-0.1.1.AppImage`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animATEM-0.1.1.AppImage) | 123 MB |
-| ARM64 · AppImage | [`animATEM-0.1.1-arm64.AppImage`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.1/animATEM-0.1.1-arm64.AppImage) | 124 MB |
+| x64 · .deb package (Debian/Ubuntu) | [`animatem_0.1.1_amd64.deb`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animatem_0.1.2_amd64.deb) | 91 MB |
+| ARM64 · .deb package (Debian/Ubuntu) | [`animatem_0.1.1_arm64.deb`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animatem_0.1.2_arm64.deb) | 87 MB |
+| x64 · .rpm package (Fedora/RHEL) | [`animatem-0.1.1.x86_64.rpm`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animatem-0.1.2.x86_64.rpm) | 81 MB |
+| ARM64 · .rpm package (Fedora/RHEL) | [`animatem-0.1.1.aarch64.rpm`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animatem-0.1.2.aarch64.rpm) | 76 MB |
+| x64 · AppImage | [`animATEM-0.1.1.AppImage`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animATEM-0.1.2.AppImage) | 117 MB |
+| ARM64 · AppImage | [`animATEM-0.1.1-arm64.AppImage`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animATEM-0.1.2-arm64.AppImage) | 118 MB |
 
 </details>
 
