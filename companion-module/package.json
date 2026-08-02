@@ -25,10 +25,10 @@
     "@types/node": "^22.19.1",
     "@types/ws": "^8.18.1",
     "eslint": "^9.39.1",
-    "prettier": "^3.7.4",
+    "prettier": "^3.9.6",
     "rimraf": "^6.1.3",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.59.0",
+    "typescript-eslint": "^8.65.0",
     "vitest": "^4.1.10"
   },
   "allowScripts": {
