@@ -25,11 +25,11 @@ keyframes), so animATEM eases into the target layout client-side — a fixed-
 cadence stream of interpolated positions, not a single instant command. Pick
 a duration and hit "Animate" instead of "Take" in the SuperSource editor.
 
-A companion [Bitfocus Companion](https://bitfocus.io/companion) module lives
-in [`companion-module/`](companion-module/README.md) — it lets Companion
-buttons trigger Cut/Auto/FTB, source selection, memory recall, and animated
-SuperSource memory recall against animATEM's local control server, with
-feedback/variables for the current program/preview input.
+A [Bitfocus Companion](https://bitfocus.io/companion) module lives in its own
+repo, [companion-module-animatem](https://github.com/stoatworks-labs/companion-module-animatem) — cut, auto and FTB per M/E, program,
+preview and aux selection **by input name**, and SuperSource/DVE memory recall,
+with program and preview tally. It talks to animATEM's local control server, so
+there is nothing to set up on this side beyond having the app running.
 
 <!-- downloads:start -->
 
@@ -173,10 +173,10 @@ npm run test
 
 Unit tests cover the pure box-geometry/drag/coordinate-conversion math and
 the file-backed calibration/memory stores (`vitest`, no hardware needed).
-`companion-module/` has its own `npm run test` covering the control-server
-WebSocket client. CI (`.github/workflows/ci.yml`) runs typecheck/lint/test
-for both packages on every push and PR; `.github/workflows/release.yml`
-builds installers for Windows/macOS/Linux (x64 + arm64) on a `v*` tag.
+The Companion module now lives in [its own repo](https://github.com/stoatworks-labs/companion-module-animatem) and carries its own
+tests. CI (`.github/workflows/ci.yml`) runs typecheck/lint/test on every push
+and PR; `.github/workflows/release.yml` builds installers for
+Windows/macOS/Linux (x64 + arm64) on a `v*` tag.
 
 ## Status
 
@@ -197,7 +197,7 @@ Requires an ATEM Mini Pro/Extreme ISO with its USB output set to
 work.
 
 The local control server (`ws://127.0.0.1:51234`) and the
-[companion module](companion-module/README.md) that talks to it are also
+[Companion module](https://github.com/stoatworks-labs/companion-module-animatem) that talks to it are also
 built and verified end-to-end — a real WebSocket client (including the
 module's own compiled client code) connects, receives the initial status/
 snapshot/memories state, and round-trips commands against a running
