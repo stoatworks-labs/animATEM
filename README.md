@@ -42,12 +42,12 @@ there is nothing to set up on this side beyond having the app running.
 
 | Build | Download | Size |
 | --- | --- | --- |
-| Apple Silicon · .dmg disk image | [`animATEM-0.1.2-arm64.dmg`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animATEM-0.1.2-arm64.dmg) | 117 MB |
+| Apple Silicon · .dmg disk image | [`animATEM-0.1.2-arm64.dmg`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animATEM-0.1.2-arm64.dmg) | 116 MB |
 | Intel · .dmg disk image | [`animATEM-0.1.2.dmg`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animATEM-0.1.2.dmg) | 124 MB |
-| Apple Silicon · .pkg installer | [`animatem-0.1.2-macos-arm64.pkg`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animatem-0.1.2-macos-arm64.pkg) | 117 MB |
-| Intel · .pkg installer | [`animatem-0.1.2-macos-x64.pkg`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animatem-0.1.2-macos-x64.pkg) | 124 MB |
-| Apple Silicon · .zip archive | [`animATEM-0.1.2-arm64-mac.zip`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animATEM-0.1.2-arm64-mac.zip) | 114 MB |
-| Intel · .zip archive | [`animATEM-0.1.2-mac.zip`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animATEM-0.1.2-mac.zip) | 121 MB |
+| Apple Silicon · .pkg installer | [`animatem-0.1.2-macos-arm64.pkg`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animatem-0.1.2-macos-arm64.pkg) | 116 MB |
+| Intel · .pkg installer | [`animatem-0.1.2-macos-x64.pkg`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animatem-0.1.2-macos-x64.pkg) | 125 MB |
+| Apple Silicon · .zip archive | [`animATEM-0.1.2-arm64-mac.zip`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animATEM-0.1.2-arm64-mac.zip) | 117 MB |
+| Intel · .zip archive | [`animATEM-0.1.2-mac.zip`](https://github.com/stoatworks-labs/animATEM/releases/download/v0.1.2/animATEM-0.1.2-mac.zip) | 125 MB |
 
 </details>
 
@@ -83,7 +83,7 @@ there is nothing to set up on this side beyond having the app running.
 
 All builds, checksums and release notes: [github.com/stoatworks-labs/animATEM/releases](https://github.com/stoatworks-labs/animATEM/releases).
 
-The Windows builds are unsigned, so SmartScreen warns once — see [Unsigned builds — Gatekeeper, SmartScreen & Defender Firewall](#unsigned-builds--gatekeeper-smartscreen--defender-firewall) for the one-time click-through.
+The Windows builds are unsigned, so SmartScreen warns once — see [Windows SmartScreen & Defender Firewall](#windows-smartscreen--defender-firewall) for the one-time click-through.
 
 <!-- downloads:end -->
 
