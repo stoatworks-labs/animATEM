@@ -6,7 +6,10 @@ import eslintPluginReactHooks from 'eslint-plugin-react-hooks'
 import eslintPluginReactRefresh from 'eslint-plugin-react-refresh'
 
 export default defineConfig(
-  { ignores: ['**/node_modules', '**/dist', '**/out'] },
+  // public/ holds the shared Stoatworks web assets (About window, support
+  // footer). They are plain JS mastered in stoatworks-backend, so the
+  // TypeScript rules here can never be satisfied without editing the master.
+  { ignores: ['**/node_modules', '**/dist', '**/out', 'public/**'] },
   tseslint.configs.recommended,
   eslintPluginReact.configs.flat.recommended,
   eslintPluginReact.configs.flat['jsx-runtime'],
