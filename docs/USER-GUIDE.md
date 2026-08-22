@@ -201,7 +201,7 @@ do.
 | **A Companion button appears to do nothing** | Commands aren't acknowledged; the switcher may be disconnected. Watch the state feedback, not the button. |
 | **All memories disappeared** | Usually a corrupted memories file — it fails to an empty list rather than erroring. |
 | **Memories missing on another machine** | They are stored per-machine in the app's data directory, not on the switcher. |
-| **macOS says the app is damaged** | Unsigned build — see [UNSIGNED.md](UNSIGNED.md). |
+| **macOS says the app is damaged** | Not the released build — those are signed and notarised. A self-built or pre-notarisation copy is quarantined; see [UNSIGNED.md](UNSIGNED.md). |
 
 ---
 
