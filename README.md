@@ -3,8 +3,10 @@
 [![ci](https://github.com/stoatworks-labs/animATEM/actions/workflows/ci.yml/badge.svg)](https://github.com/stoatworks-labs/animATEM/actions/workflows/ci.yml)
 
 > **AI-assisted project.** This codebase was created with [Claude Code](https://claude.com/claude-code)
-> (Anthropic), directed and reviewed by a human author. It has not yet been
-> validated against real ATEM hardware.
+> (Anthropic), directed and reviewed by a human author. It has been run against a
+> real ATEM Mini Extreme ISO (2026-07-17/18), where the multiview calibration was
+> found wrong and fixed; the coordinate scale for the Preview panes is still an
+> uncalibrated placeholder. See [Status](#status).
 
 Network control for Blackmagic ATEM switchers (Mini Pro/Extreme ISO family,
 Phase 1), with standard PGM/PVW switching plus a software-composited
@@ -185,12 +187,22 @@ auto/FTB/program/preview/aux), UVC multiview capture, box calibration,
 the SuperSource and DVE Program/Preview/Take workflow with drag-to-move/
 resize editing, named memories, and the touchscreen operator UI with
 kiosk mode. Everything has been exercised in isolated browser/Electron
-harnesses (typecheck, lint, and functional checks all pass), but **none
-of it has been run against a real ATEM switcher yet** — the coordinate
-scale used for the Preview panes' visual layout (see `superSourceCoords.ts`
-/ `dveCoords.ts`) is a labeled placeholder pending real hardware to
-calibrate against, and the UVC capture path has only been exercised
-against a generic webcam, not a real ATEM's multiview output.
+harnesses (typecheck, lint, and functional checks all pass), and the
+capture and calibration path **has been run against a real ATEM Mini
+Extreme ISO** (2026-07-17/18): the switcher's multiview came in over USB
+as a UVC device and was cropped live. That session found a real bug —
+the app had assumed multiview `windowIndex` values run left-to-right and
+top-to-bottom, and they do not, which produced completely wrong crops.
+The operator now confirms each box against a dropdown of the ATEM's
+actual live source names instead of typing an index, and the fix was
+confirmed working on that switcher (commit `64a4ecb`).
+
+**Still not confirmed on hardware:** the coordinate scale used for the
+Preview panes' visual layout (see `superSourceCoords.ts` / `dveCoords.ts`)
+is still a labeled placeholder, never calibrated against a real switcher,
+and the cut/auto/FTB/recall command path has only been exercised in
+harnesses. The starting grid the auto-create button seeds is a generic
+`ceil(sqrt(N))` heuristic, not real per-model layout geometry.
 
 Requires an ATEM Mini Pro/Extreme ISO with its USB output set to
 **Multiview** (not the default Program) for the compositing workflow to
@@ -240,9 +252,9 @@ procedure: **[docs/UNSIGNED.md](docs/UNSIGNED.md)**.
 
 ## Roadmap / TODO
 
-- [ ] **Validate against a real ATEM** — run the full compositing workflow and cut/auto/recall command behavior against a real Mini Pro/Extreme ISO (everything so far is verified only in browser/Electron harnesses).
+- [ ] **Validate the switching commands against a real ATEM** — capture and calibration have been run against a Mini Extreme ISO (2026-07-17/18); the cut/auto/recall command behaviour has not, and is still verified only in browser/Electron harnesses.
 - [ ] **Calibrate coordinate scale** — the SuperSource/DVE Preview layout scale (`superSourceCoords.ts` / `dveCoords.ts`) is a labeled placeholder pending real hardware to calibrate against.
-- [ ] **Real multiview capture** — the UVC capture path has only been exercised against a generic webcam, not a real ATEM's multiview output.
+- [x] **Real multiview capture** — done 2026-07-17/18: a real Mini Extreme ISO's multiview came in over USB and was cropped live, which is how the `windowIndex` ordering bug was found.
 
 <!-- attributions:start -->
 This project is built on other people's work — see [ATTRIBUTIONS.md](ATTRIBUTIONS.md).
