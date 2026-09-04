@@ -1,7 +1,7 @@
 {
   "name": "animatem",
   "productName": "animATEM",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Network control for Blackmagic ATEM switchers with a software-composited SuperSource/DVE preview built from the switcher's own UVC multiview output, driven from a touchscreen.",
   "private": true,
   "main": "./out/main/index.js",
