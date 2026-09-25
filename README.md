@@ -33,6 +33,10 @@ preview and aux selection **by input name**, and SuperSource/DVE memory recall,
 with program and preview tally. It talks to animATEM's local control server, so
 there is nothing to set up on this side beyond having the app running.
 
+[![animATEM — ATEM SuperSource and DVE previews from the switcher's own multiview](docs/video-thumb.png)](https://www.youtube.com/watch?v=Uhs7UqI3Rlk)
+
+*[Watch it](https://www.youtube.com/watch?v=Uhs7UqI3Rlk) — 58 seconds: calibration, the Touch surface, SuperSource boxes dragged and animated, a memory saved and recalled, and a DVE move taken. No switcher was involved: this is the app's real renderer in the repository's filming harness (`src/film`), with a stand-in switcher and a synthetic test-pattern multiview, recorded headlessly.*
+
 <!-- downloads:start -->
 
 ## Download
