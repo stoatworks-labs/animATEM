@@ -217,11 +217,12 @@ animATEM without errors. Like everything else, what the commands actually do
 (cut/auto/recall) hasn't been checked against a real switcher yet.
 
 Production packaging is verified too: `npm run build:mac` produces working
-x64 + arm64 `.dmg`/`.zip` installers, signed by nobody (no Apple dev cert
-yet), and the packaged arm64 `.app` boots cleanly on its own, with the full
-Electron process tree up and the control server bound correctly. That's
-separate from every other check in this project, which has run through
-`npm run dev`.
+x64 + arm64 `.dmg`/`.zip` installers, and the packaged arm64 `.app` boots
+cleanly on its own, with the full Electron process tree up and the control
+server bound correctly. That's separate from every other check in this
+project, which has run through `npm run dev`. A local `npm run build:mac` is
+only ad-hoc signed; the released macOS builds are Developer ID-signed and
+notarised by `scripts/release-local.sh`.
 
 ## ⚠️ Security note
 

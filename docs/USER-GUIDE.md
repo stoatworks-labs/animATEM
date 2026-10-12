@@ -6,10 +6,11 @@ over USB, crops the source boxes out of that live feed and recomposites them int
 arrangement, so you're dragging real pixels around rather than guessing at coordinates.
 
 > **Before you rely on this:** everything here is built and exercised (typecheck, lint and tests
-> pass, the control server round-trips real commands, the packaged app boots), but **none of it
-> has touched a real switcher**. The UVC capture path has only been tried against a generic
-> webcam, never a real ATEM multiview. Read [What isn't proven yet](#what-isnt-proven-yet) before
-> you put this anywhere near an audience.
+> pass, the control server round-trips real commands, the packaged app boots), and the capture and
+> calibration path **has been run against a real ATEM Mini Extreme ISO** (2026-07-17/18), which is
+> where a wrong guess about multiview window numbering turned up and got fixed. **The cut, auto,
+> FTB and recall commands have only run in harnesses, never against a real switcher.** Read
+> [What isn't proven yet](#what-isnt-proven-yet) before you put this anywhere near an audience.
 >
 > This is an AI-assisted codebase, human-directed and reviewed. Review it before relying on it.
 
@@ -156,10 +157,10 @@ means every tap is a live cut, which is the point on a fast show and a hazard on
 
 ## Stream Deck and Companion
 
-A [Bitfocus Companion](https://bitfocus.io/companion) module ships in
-[`companion-module/`](../companion-module/README.md). Buttons can trigger Cut, Auto, FTB, source
-selection, memory recall and animated SuperSource recall, with feedback and variables for the
-current program and preview input.
+A [Bitfocus Companion](https://bitfocus.io/companion) module lives in its own repo,
+[companion-module-animatem](https://github.com/stoatworks-labs/companion-module-animatem).
+Buttons can trigger Cut, Auto, FTB, source selection, memory recall and animated SuperSource
+recall, with feedback and variables for the current program and preview input.
 
 > **A Companion memory-recall button goes straight to air.** That's on purpose: a physical
 > button press is treated as a physical action, the way a memory bank works on real switcher
@@ -209,5 +210,5 @@ do.
 
 - [API.md](API.md): the control protocol, state model and coordinate conversions
 - [DEVELOPING.md](DEVELOPING.md): building and extending
-- [`companion-module/README.md`](../companion-module/README.md): the Companion module
+- [companion-module-animatem](https://github.com/stoatworks-labs/companion-module-animatem): the Companion module, in its own repo
 - [README](../README.md): concept, status and the security note
