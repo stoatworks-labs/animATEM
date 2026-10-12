@@ -3,39 +3,37 @@
 [![ci](https://github.com/stoatworks-labs/animATEM/actions/workflows/ci.yml/badge.svg)](https://github.com/stoatworks-labs/animATEM/actions/workflows/ci.yml)
 
 > **AI-assisted project.** This codebase was created with [Claude Code](https://claude.com/claude-code)
-> (Anthropic), directed and reviewed by a human author. It has been run against a
-> real ATEM Mini Extreme ISO (2026-07-17/18), where the multiview calibration was
-> found wrong and fixed; the coordinate scale for the Preview panes is still an
-> uncalibrated placeholder. See [Status](#status).
+> (Anthropic), directed and reviewed by a human author. It's been run against a real ATEM
+> Mini Extreme ISO (2026-07-17/18), where the multiview calibration turned out to be wrong and
+> got fixed. The coordinate scale for the Preview panes is still an uncalibrated placeholder.
+> See [Status](#status).
 
-Network control for Blackmagic ATEM switchers (Mini Pro/Extreme ISO family,
-Phase 1), with standard PGM/PVW switching plus a software-composited
-preview/program workflow for SuperSource and DVE box layouts.
+Network control for Blackmagic ATEM switchers (the Mini Pro/Extreme ISO family, for Phase 1),
+with ordinary PGM/PVW switching plus a preview/program workflow for SuperSource and DVE box
+layouts, composited in software.
 
-Instead of building a synthetic preview from scratch, animATEM captures the
-switcher's own multiview output over USB (it enumerates as a UVC webcam),
-crops the individual source boxes out of that live multiview feed in
-software, and recomposites them into an arbitrary custom arrangement to
-preview SuperSource/DVE changes with real live pixels before they're pushed
-to air. Named "memories" — app-level presets, independent of the ATEM's own
-macro system — capture and recall these arrangements.
+Rather than building a pretend preview from scratch, animATEM captures the switcher's own
+multiview output over USB (it turns up as a UVC webcam), crops the individual source boxes
+out of that live feed in software, and recomposites them into whatever arrangement you like,
+so you can preview SuperSource and DVE changes with live pixels before they go to air. Named
+"memories" (presets that belong to the app, independent of the ATEM's own macro system)
+capture and recall these arrangements.
 
-SuperSource box moves can also be **animated** rather than cut instantly: the
-ATEM protocol itself has no native SuperSource tweening (unlike an upstream
-keyer's DVE, which the switcher already animates in hardware via fly-
-keyframes), so animATEM eases into the target layout client-side — a fixed-
-cadence stream of interpolated positions, not a single instant command. Pick
-a duration and hit "Animate" instead of "Take" in the SuperSource editor.
+SuperSource box moves can also be **animated** rather than cut. The ATEM protocol has no
+SuperSource tweening of its own (unlike an upstream keyer's DVE, which the switcher animates
+in hardware with fly keyframes), so animATEM eases into the target layout from the client
+end, sending a fixed-cadence stream of interpolated positions rather than one instant
+command. Pick a duration and hit "Animate" instead of "Take" in the SuperSource editor.
 
-A [Bitfocus Companion](https://bitfocus.io/companion) module lives in its own
-repo, [companion-module-animatem](https://github.com/stoatworks-labs/companion-module-animatem) — cut, auto and FTB per M/E, program,
-preview and aux selection **by input name**, and SuperSource/DVE memory recall,
-with program and preview tally. It talks to animATEM's local control server, so
-there is nothing to set up on this side beyond having the app running.
+There's a [Bitfocus Companion](https://bitfocus.io/companion) module in its own repo,
+[companion-module-animatem](https://github.com/stoatworks-labs/companion-module-animatem).
+It does cut, auto and FTB per M/E, program, preview and aux selection **by input name**, and
+SuperSource/DVE memory recall, with program and preview tally. It talks to animATEM's local
+control server, so there's nothing to set up on this side beyond having the app running.
 
 [![animATEM — ATEM SuperSource and DVE previews from the switcher's own multiview](docs/video-thumb.png)](https://www.youtube.com/watch?v=Uhs7UqI3Rlk)
 
-*[Watch it](https://www.youtube.com/watch?v=Uhs7UqI3Rlk) — 58 seconds: calibration, the Touch surface, SuperSource boxes dragged and animated, a memory saved and recalled, and a DVE move taken. No switcher was involved: this is the app's real renderer in the repository's filming harness (`src/film`), with a stand-in switcher and a synthetic test-pattern multiview, recorded headlessly.*
+*[Watch it](https://www.youtube.com/watch?v=Uhs7UqI3Rlk) (58 seconds): calibration, the Touch surface, SuperSource boxes dragged and animated, a memory saved and recalled, and a DVE move taken. No switcher was harmed, or indeed involved: it's the app's own renderer in the repo's filming harness (`src/film`), with a stand-in switcher and a synthetic test-pattern multiview, recorded headlessly.*
 
 <!-- downloads:start -->
 
@@ -99,21 +97,21 @@ macOS builds are signed and notarised and open normally. The Windows builds are 
 
 ## Screenshots
 
-The multiview boxes below are a synthetic test-pattern feed (colour bars, big numbers, source labels), not a real ATEM's output — a stand-in so these screenshots don't depend on hardware being connected. Everything else — the app chrome, data tables, and layouts — is the real UI.
+The multiview boxes below are a synthetic test-pattern feed (colour bars, big numbers, source labels), not a real ATEM's output, so these screenshots don't depend on hardware being connected. Everything else (the app chrome, data tables and layouts) is the real UI.
 
-The touchscreen operator view — a composited multiview with tap-to-select regions and a function key row below it:
+The touchscreen operator view, a composited multiview with tap-to-select regions and a row of function keys underneath:
 
 ![Touch tab: composited multiview canvas with Tap → PVW/PGM, Cut, Auto, FTB, and Kiosk function keys](docs/screenshots/touch.png)
 
-The calibration screen, where an operator draws each multiview box's region once per capture resolution — or auto-creates a starting grid sized to the live window count and drags boxes/corners into place:
+The calibration screen, where you draw each multiview box's region once per capture resolution, or auto-create a starting grid sized to the live window count and drag the boxes and corners into place:
 
 ![Calibrate tab: instructions, an auto-create-boxes button, a canvas showing calibrated multiview box regions, and a window/live-source table below](docs/screenshots/calibrate.png)
 
-The SuperSource editor — Program (live) and Preview (editable, drag to move/resize) panes side by side, plus the memory bank:
+The SuperSource editor, with Program (live) and Preview (editable, drag to move/resize) panes side by side, plus the memory bank:
 
 ![SuperSource tab: Program and Preview panes, a 4-box settings table, and the memory bank](docs/screenshots/supersource.png)
 
-The DVE editor, same Program/Preview/Take pattern applied to a single upstream keyer:
+The DVE editor, with the same Program/Preview/Take pattern applied to a single upstream keyer:
 
 ![DVE tab: Program and Preview panes, fill/position/size settings, and the memory bank](docs/screenshots/dve.png)
 
@@ -124,14 +122,14 @@ The raw multiview passthrough and live ATEM state, useful while wiring things up
 ## Stack
 
 Electron + `electron-vite` + React + TypeScript, following the same
-conventions as this author's other Electron control apps
+conventions as my other Electron control apps
 (`presentation-commander-client/server`, `MicWizard`):
 `src/{main,preload,renderer,shared}`, service classes under
 `src/main/services/*.ts`.
 
 ATEM Ethernet protocol control via
 [`atem-connection`](https://github.com/Sofie-Automation/sofie-atem-connection)
-(main process — UDP). UVC multiview capture via the renderer's
+(main process, UDP). UVC multiview capture via the renderer's
 `navigator.mediaDevices.getUserMedia` (full Chromium context, no native
 addon needed).
 
@@ -154,9 +152,9 @@ npm run dev
 
 **Known install gotcha on this machine (Node v26.5.0):** `electron`'s
 postinstall uses `extract-zip@2.0.1`, whose promise hangs forever on this
-Node version instead of extracting or erroring — `npm install` finishes
-but `node_modules/electron/dist` is left with no `Electron.app`, and `npm
-run dev` fails with `spawn .../Electron ENOENT`. If that happens:
+Node version instead of extracting or failing. `npm install` finishes, but
+`node_modules/electron/dist` is left with no `Electron.app`, and
+`npm run dev` fails with `spawn .../Electron ENOENT`. If that happens:
 
 ```sh
 # find the cached zip extract-zip already downloaded
@@ -186,79 +184,77 @@ Windows/macOS/Linux (x64 + arm64) on a `v*` tag.
 
 ## Status
 
-Phase 1 feature set is built: ATEM connection (standard switching — cut/
-auto/FTB/program/preview/aux), UVC multiview capture, box calibration,
-the SuperSource and DVE Program/Preview/Take workflow with drag-to-move/
-resize editing, named memories, and the touchscreen operator UI with
-kiosk mode. Everything has been exercised in isolated browser/Electron
-harnesses (typecheck, lint, and functional checks all pass), and the
-capture and calibration path **has been run against a real ATEM Mini
-Extreme ISO** (2026-07-17/18): the switcher's multiview came in over USB
-as a UVC device and was cropped live. That session found a real bug —
-the app had assumed multiview `windowIndex` values run left-to-right and
-top-to-bottom, and they do not, which produced completely wrong crops.
-The operator now confirms each box against a dropdown of the ATEM's
-actual live source names instead of typing an index, and the fix was
-confirmed working on that switcher (commit `64a4ecb`).
+The Phase 1 feature set is built: ATEM connection (standard switching:
+cut/auto/FTB/program/preview/aux), UVC multiview capture, box calibration,
+the SuperSource and DVE Program/Preview/Take workflow with drag-to-move/resize
+editing, named memories, and the touchscreen operator UI with kiosk mode.
+Everything has been exercised in isolated browser/Electron harnesses
+(typecheck, lint and functional checks all pass), and the capture and
+calibration path **has been run against a real ATEM Mini Extreme ISO**
+(2026-07-17/18): the switcher's multiview came in over USB as a UVC device and
+was cropped live. That session found a proper bug. The app had assumed
+multiview `windowIndex` values run left to right and top to bottom, and they
+don't, which produced completely wrong crops. Now you confirm each box against
+a dropdown of the ATEM's actual live source names instead of typing an index,
+and the fix was confirmed working on that switcher (commit `64a4ecb`).
 
 **Still not confirmed on hardware:** the coordinate scale used for the
 Preview panes' visual layout (see `superSourceCoords.ts` / `dveCoords.ts`)
-is still a labeled placeholder, never calibrated against a real switcher,
+is still a labelled placeholder, never calibrated against a real switcher,
 and the cut/auto/FTB/recall command path has only been exercised in
 harnesses. The starting grid the auto-create button seeds is a generic
 `ceil(sqrt(N))` heuristic, not real per-model layout geometry.
 
-Requires an ATEM Mini Pro/Extreme ISO with its USB output set to
-**Multiview** (not the default Program) for the compositing workflow to
-work.
+The compositing workflow needs an ATEM Mini Pro/Extreme ISO with its USB
+output set to **Multiview** (not the default, Program).
 
 The local control server (`ws://127.0.0.1:51234`) and the
 [Companion module](https://github.com/stoatworks-labs/companion-module-animatem) that talks to it are also
-built and verified end-to-end — a real WebSocket client (including the
-module's own compiled client code) connects, receives the initial status/
-snapshot/memories state, and round-trips commands against a running
-animATEM instance without errors. Like everything else, actual command
-behavior (cut/auto/recall) hasn't been checked against a real switcher yet.
+built and verified end to end: a real WebSocket client (including the
+module's own compiled client code) connects, receives the initial
+status/snapshot/memories state, and round-trips commands against a running
+animATEM without errors. Like everything else, what the commands actually do
+(cut/auto/recall) hasn't been checked against a real switcher yet.
 
 Production packaging is verified too: `npm run build:mac` produces working
-signed-nothing (no Apple dev cert yet) x64 + arm64 `.dmg`/`.zip` installers,
-and the packaged arm64 `.app` boots cleanly on its own — full Electron
-process tree comes up, the control server binds correctly — separate from
-every other check in this project, which has run through `npm run dev`.
+x64 + arm64 `.dmg`/`.zip` installers, signed by nobody (no Apple dev cert
+yet), and the packaged arm64 `.app` boots cleanly on its own, with the full
+Electron process tree up and the control server bound correctly. That's
+separate from every other check in this project, which has run through
+`npm run dev`.
 
 ## ⚠️ Security note
 
 The local control server (`src/main/services/controlServer.ts`) binds to
-`127.0.0.1:51234` with **no authentication** — anything that can reach that
+`127.0.0.1:51234` with **no authentication**, so anything that can reach that
 port on the local machine can cut/auto/FTB the switcher or recall a memory.
-This is fine as long as it stays bound to localhost (the default, and the
-only configuration this app currently supports). If you ever change that
-binding to `0.0.0.0` or another network-reachable address, add
-authentication first — as shipped, it is not safe to expose beyond
-localhost.
+That's fine as long as it stays bound to localhost (the default, and the
+only configuration this app supports at the moment). If you ever change that
+binding to `0.0.0.0` or another address the network can reach, add
+authentication first. As shipped, it isn't safe to expose beyond localhost.
 
 ## Windows SmartScreen & Defender Firewall
 
-macOS builds are **Developer ID-signed and notarised by Apple** — they open
+macOS builds are **Developer ID-signed and notarised by Apple**, so they open
 normally, with no Gatekeeper warning and no quarantine step. The Windows
-binaries are **not** code-signed, so Windows still warns you the first time.
+binaries **aren't** code-signed, so Windows still warns you the first time.
 
-- **Windows** — SmartScreen shows *"Windows protected your PC"* →
+- **Windows**: SmartScreen shows *"Windows protected your PC"* →
   **More info** → **Run anyway**.
-- **Windows Defender Firewall** — first launch pops *"Allow animATEM to communicate on
-  these networks"*. Tick **Private** (and **Domain** on a managed network) — animATEM
+- **Windows Defender Firewall**: the first launch pops up *"Allow animATEM to communicate on
+  these networks"*. Tick **Private** (and **Domain** on a managed network), because animATEM
   needs it to reach the ATEM switcher and expose its Companion control port. Deny it and
   the switcher will show as offline and Companion won't connect.
-- **Linux** — no signing gate.
+- **Linux**: no signing gate.
 
 Per-artifact steps, self-signing, checksum verification and the Defender Firewall reset
 procedure: **[docs/UNSIGNED.md](docs/UNSIGNED.md)**.
 
 ## Roadmap / TODO
 
-- [ ] **Validate the switching commands against a real ATEM** — capture and calibration have been run against a Mini Extreme ISO (2026-07-17/18); the cut/auto/recall command behaviour has not, and is still verified only in browser/Electron harnesses.
-- [ ] **Calibrate coordinate scale** — the SuperSource/DVE Preview layout scale (`superSourceCoords.ts` / `dveCoords.ts`) is a labeled placeholder pending real hardware to calibrate against.
-- [x] **Real multiview capture** — done 2026-07-17/18: a real Mini Extreme ISO's multiview came in over USB and was cropped live, which is how the `windowIndex` ordering bug was found.
+- [ ] **Validate the switching commands against a real ATEM**: capture and calibration have been run against a Mini Extreme ISO (2026-07-17/18), but the cut/auto/recall command behaviour hasn't, and is still only verified in browser/Electron harnesses.
+- [ ] **Calibrate coordinate scale**: the SuperSource/DVE Preview layout scale (`superSourceCoords.ts` / `dveCoords.ts`) is a labelled placeholder until there's real hardware to calibrate it against.
+- [x] **Real multiview capture**: done 2026-07-17/18. A real Mini Extreme ISO's multiview came in over USB and was cropped live, which is how the `windowIndex` ordering bug was found.
 
 <!-- attributions:start -->
 This project is built on other people's work — see [ATTRIBUTIONS.md](ATTRIBUTIONS.md).
