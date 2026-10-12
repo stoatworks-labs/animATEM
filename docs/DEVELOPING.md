@@ -1,7 +1,8 @@
 # animATEM — Developing
 
-Electron + TypeScript via electron-vite, vitest. Two packages in one repo: the app, and the
-Companion module under `companion-module/`.
+Electron + TypeScript via electron-vite, vitest. The Companion module used to live here under
+`companion-module/`; it has its own repo now,
+[companion-module-animatem](https://github.com/stoatworks-labs/companion-module-animatem).
 
 The [README](../README.md) has the install recipe and the `extract-zip` workaround; this is the
 model, the rules and the traps.
@@ -20,12 +21,13 @@ Scope discipline matters here — fleet concerns belong in the other two.
 
 ## 2. Status, stated plainly
 
-Phase 1 is built and CI is green. **It has not been validated against real ATEM hardware.**
+Phase 1 is built and CI is green. The UVC capture and calibration path has been run against a
+real ATEM Mini Extreme ISO (2026-07-17/18), which found the multiview window-order bug fixed in
+`64a4ecb`. **The switching commands have not been validated against real ATEM hardware.**
 
-Two specific things are unverified and are labelled as such in the code:
+One specific thing is unverified and is labelled as such in the code:
 
 - The **coordinate scale** in `superSourceCoords.ts` / `dveCoords.ts` (§4).
-- The **UVC capture path**, exercised only against a generic webcam, never a real multiview.
 
 The compositing preview is a **model of what the switcher will do.** Until it's checked against
 real output, treat agreement as unproven — and keep any new user-facing text saying so rather
@@ -44,7 +46,6 @@ src/renderer/     UI
   src/compositor/   boxGeometry, compositeCanvas, dragInteraction,
                     dveCoords, superSourceCoords
 src/shared/       protocol, easing, superSourceAnimation — shared main/renderer
-companion-module/ Bitfocus Companion module (its own npm package, own tests)
 ```
 
 ```bash
@@ -62,9 +63,9 @@ npm run build:mac    # / :win / :linux
 `postinstall` runs `electron-builder install-app-deps` for native dependencies. **If a native
 module misbehaves after a dependency change, re-run install rather than hand-patching.**
 
-`companion-module/` has its **own** `npm run test`. CI runs typecheck/lint/test for both packages
-on every push and PR; `release.yml` builds Windows/macOS/Linux (x64 + arm64) installers on a
-`v*` tag. **Cross-compile macOS x86_64 on `macos-14` — never `macos-13`.**
+The Companion module has its **own** `npm run test`, in its own repo. CI here runs
+typecheck/lint/test on every push and PR; `release.yml` builds Windows/macOS/Linux (x64 +
+arm64) installers on a `v*` tag. **Cross-compile macOS x86_64 on `macos-14` — never `macos-13`.**
 
 ---
 
@@ -140,7 +141,7 @@ Design rules to preserve:
 - **`recallMemory` from the control server pushes straight to the switcher**, unlike the editor
   UI which recalls into an editable Preview. A physical button press is a physical action. That
   difference is intentional and documented in
-  [USER-GUIDE.md §7](USER-GUIDE.md) — don't "fix" it.
+  [USER-GUIDE.md](USER-GUIDE.md#stream-deck-and-companion) — don't "fix" it.
 
 ### ⚠ Binding and authentication
 
@@ -153,8 +154,9 @@ something on air. That's acceptable only while it stays on localhost.
 
 ### The protocol is duplicated by hand
 
-`companion-module/src/protocol.ts` mirrors `src/shared/protocol.ts`. The module is a separate npm
-package and cannot import from the app. **Change one, change the other, in the same commit.**
+companion-module-animatem's `src/protocol.ts` mirrors `src/shared/protocol.ts`. The module is a
+separate npm package in its own repo and cannot import from the app. **Change one, change the
+other, in the same commit.**
 
 They are intentionally *not* byte-identical: the module's `Memory` types omit `layout`, since a
 control surface doesn't need it. Message shapes must match; type breadth needn't.
@@ -168,7 +170,7 @@ control surface doesn't need it. Message shapes must match; type breadth needn't
 - `memoryStore` rewrites the whole JSON file on every save/delete, with no locking, and returns an
   empty list on a read failure. If memories ever need to survive concurrent writers, that's the
   place to change.
-- Private repo, but it still ships a **user-facing AI-assisted disclaimer**. Keep it.
+- Public repo, and it ships a **user-facing AI-assisted disclaimer**. Keep it.
 - "Commit" means commit **and** push.
 
 ---
@@ -177,5 +179,5 @@ control surface doesn't need it. Message shapes must match; type breadth needn't
 
 - [API.md](API.md) — protocol, state model, coordinate maths, memories format
 - [USER-GUIDE.md](USER-GUIDE.md) — the operator view
-- [`companion-module/README.md`](../companion-module/README.md)
+- [companion-module-animatem](https://github.com/stoatworks-labs/companion-module-animatem)
 - [`AGENTS.md`](../AGENTS.md) — LLM onboarding

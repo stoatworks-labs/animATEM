@@ -15,7 +15,7 @@ The compositing part is the distinctive bit. Rather than only sending commands a
 it composites a preview of SuperSource/DVE box arrangements locally (over UVC multiview
 capture), so a layout can be seen before it goes to air.
 
-Electron + TypeScript, electron-vite, vitest. **Private repo.**
+Electron + TypeScript, electron-vite, vitest. **Public repo.**
 
 ## 2. Where this sits among the ATEM projects
 
@@ -35,8 +35,10 @@ src/renderer/   UI
   src/compositor/  boxGeometry, compositeCanvas, dragInteraction,
                    dveCoords, superSourceCoords
 src/shared/     easing, superSourceAnimation - shared main/renderer code
-companion-module/  Bitfocus Companion module for this app
 ```
+
+The Bitfocus Companion module moved to its own repo,
+[companion-module-animatem](https://github.com/stoatworks-labs/companion-module-animatem).
 
 **Two tsconfigs**: main/preload (`tsconfig.node.json`) vs renderer (`tsconfig.web.json`).
 `npm run typecheck` covers both — use it rather than a bare `tsc`.
@@ -72,13 +74,15 @@ module misbehaves after a dependency change, re-run install rather than hand-pat
 
 ## 6. Status
 
-Phase 1 is built, and CI is green. **It has not been validated against real ATEM hardware.**
+Phase 1 is built, and CI is green. Capture and calibration have been run against a real ATEM
+Mini Extreme ISO (2026-07-17/18, fixed in `64a4ecb`); **the switching commands and the preview
+coordinate scale have not been validated against real ATEM hardware.**
 The compositing preview in particular is a model of what the switcher will do — until it's
 checked against a real switcher's output, treat agreement as unproven.
 
 ## 7. Conventions
 
-- Private repo, but it still ships a user-facing AI-assisted disclaimer.
+- Public repo, and it ships a user-facing AI-assisted disclaimer.
 - Multi-platform release CI; cross-compile macOS x86_64 on `macos-14` — never `macos-13`.
 - "Commit" means commit **and** push.
 
@@ -87,7 +91,7 @@ checked against a real switcher's output, treat agreement as unproven.
 Log via `say`/`log` from `src/main/diag/`, never `console`. `installElectronDiagnostics()`
 hooks `render-process-gone` and `child-process-gone` — a dead renderer raises nothing the
 main process's `uncaughtException` handler can see. `diag:collect` and `diag:openLogFolder`
-are registered over IPC but **no UI calls them yet**; wiring a button is outstanding.
+are registered over IPC and called from the Diagnostics panel in the connection settings.
 See [docs/diagnostics.md](docs/diagnostics.md).
 
 ## Notes

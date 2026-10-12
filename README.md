@@ -123,7 +123,7 @@ The raw multiview passthrough and live ATEM state, useful while wiring things up
 
 Electron + `electron-vite` + React + TypeScript, following the same
 conventions as my other Electron control apps
-(`presentation-commander-client/server`, `MicWizard`):
+(`presentation-commander-client/server`):
 `src/{main,preload,renderer,shared}`, service classes under
 `src/main/services/*.ts`.
 

@@ -101,10 +101,10 @@ if you run a firewall, open the ports yourself (`ufw allow <port>/tcp`).
 
 ## Linux
 
-No signing gate. Make the binary executable if you took the tarball:
+No signing gate. Make the AppImage executable if you took that:
 
 ```sh
-chmod +x ./animATEM
+chmod +x ./animATEM-*.AppImage
 ```
 
 The `.deb` and `.rpm` packages are unsigned too, so your package manager may object:
