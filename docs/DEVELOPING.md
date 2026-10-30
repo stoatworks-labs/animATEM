@@ -65,7 +65,7 @@ module misbehaves after a dependency change, re-run install rather than hand-pat
 
 The Companion module has its **own** `npm run test`, in its own repo. CI here runs
 typecheck/lint/test on every push and PR; `release.yml` builds Windows/macOS/Linux (x64 +
-arm64) installers on a `v*` tag. **Cross-compile macOS x86_64 on `macos-14` — never `macos-13`.**
+arm64) installers on a `v*` tag. **Cross-compile macOS x86_64 on `macos-15` — never `macos-13`.**
 
 ---
 

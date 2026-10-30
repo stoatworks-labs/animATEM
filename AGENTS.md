@@ -83,7 +83,7 @@ checked against a real switcher's output, treat agreement as unproven.
 ## 7. Conventions
 
 - Public repo, and it ships a user-facing AI-assisted disclaimer.
-- Multi-platform release CI; cross-compile macOS x86_64 on `macos-14` — never `macos-13`.
+- Multi-platform release CI; cross-compile macOS x86_64 on `macos-15` — never `macos-13`.
 - "Commit" means commit **and** push.
 
 ## Diagnostics

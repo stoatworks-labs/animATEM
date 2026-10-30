@@ -17,7 +17,7 @@ Electron ATEM-switcher control app with UVC multiview compositing. TypeScript, e
 
 ## Notes
 - `postinstall` runs `electron-builder install-app-deps` (native deps).
-- Public repo. Ships user-facing AI disclaimer. Multi-platform release CI; cross-compile macOS x86_64 on macos-14 (never macos-13). "Commit" = commit **and** push.
+- Public repo. Ships user-facing AI disclaimer. Multi-platform release CI; cross-compile macOS x86_64 on macos-15 (never macos-13). "Commit" = commit **and** push.
 
 ## Diagnostics
 
