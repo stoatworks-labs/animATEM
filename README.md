@@ -12,6 +12,8 @@ Network control for Blackmagic ATEM switchers (the Mini Pro/Extreme ISO family, 
 with ordinary PGM/PVW switching plus a preview/program workflow for SuperSource and DVE box
 layouts, composited in software.
 
+The [project page](https://stoatworks-labs.com/software/animatem/) has the downloads, the [user guide](https://stoatworks-labs.com/software/animatem/guide/) and the video.
+
 Rather than building a pretend preview from scratch, animATEM captures the switcher's own
 multiview output over USB (it turns up as a UVC webcam), crops the individual source boxes
 out of that live feed in software, and recomposites them into whatever arrangement you like,
